@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="menu_icons">
+        <item>@drawable/btn_records</item>
+        <item>@drawable/btn_records</item>
+        <item>@drawable/btn_records</item>
+        <item>@drawable/btn_records</item>
+        <item>@drawable/btn_records</item>
+        <item>@drawable/btn_records</item> </array>
+
+    <array name="menu_colors">
+        <item>#FFC107</item>
+        <item>#E91E63</item>
+        <item>#4CAF50</item>
+        <item>#2196F3</item>
+        <item>#9C27B0</item>
+        <item>#FF5722</item>
+    </array>
+</resources>

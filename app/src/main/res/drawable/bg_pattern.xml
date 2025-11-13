@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Patrón de puntos sutil -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M20,20 L20,25 L25,25 L25,20 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M50,20 L50,25 L55,25 L55,20 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M80,20 L80,25 L85,25 L85,20 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M20,50 L20,55 L25,55 L25,50 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M50,50 L50,55 L55,55 L55,50 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M80,50 L80,55 L85,55 L85,50 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M20,80 L20,85 L25,85 L25,80 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M50,80 L50,85 L55,85 L55,80 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M80,80 L80,85 L85,85 L85,80 Z"/>
+
+    <!-- Líneas diagonales sutiles -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.03"
+        android:strokeWidth="0.5"
+        android:pathData="M0,0 L120,120"/>
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.03"
+        android:strokeWidth="0.5"
+        android:pathData="M60,0 L120,60"/>
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeAlpha="0.03"
+        android:strokeWidth="0.5"
+        android:pathData="M0,60 L60,120"/>
+</vector>

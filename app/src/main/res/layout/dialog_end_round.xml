@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/btn_menu_card_background">
+
+    <TextView
+        android:id="@+id/tvEndTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¡RONDA TERMINADA!"
+        android:textColor="#FFC107"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvEndScore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Puntaje Final: 150"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnPlayAgain"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Volver a Jugar"
+        android:background="@drawable/btn_jugar_background"
+        android:textColor="#3E2723"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnGoToMenu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Menú Principal"
+        android:background="@drawable/btn_jugar_background"
+        android:textColor="#3E2723"/>
+</LinearLayout>

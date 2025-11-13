@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/btn_menu_card_background"> <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="¡CATEGORÍA!"
+    android:textColor="#FFC107"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deportes"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnStartGame"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="¡A JUGAR!"
+        android:background="@drawable/btn_jugar_background"
+        android:textColor="#3E2723"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+</LinearLayout>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo_menu">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/top_bar_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@abrahambarrientos846"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivSettings"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Configuración" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- Fila 1: Ruleta (izquierda) y VIP (derecha) -->
+    <LinearLayout
+        android:id="@+id/layoutRuleta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <ImageView
+            android:id="@+id/btnRuleta"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:clickable="true"
+            android:contentDescription="Ruleta de la Suerte"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btm_ruleta" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutVip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v50"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <ImageView
+            android:id="@+id/btnVip"
+            android:layout_width="220dp"
+            android:layout_height="100dp"
+            android:clickable="true"
+            android:contentDescription="VIP"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_vip" />
+
+    </LinearLayout>
+
+    <!-- Fila 2: Misiones (izquierda) y Racha de Premios (derecha) -->
+
+    <LinearLayout
+        android:id="@+id/layoutMisiones"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-75dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="-10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v50"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutRuleta">
+
+        <ImageView
+            android:id="@+id/btnMisiones"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:clickable="true"
+            android:contentDescription="Misiones"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_records" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutRacha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v50"
+        app:layout_constraintTop_toBottomOf="@+id/layoutVip">
+
+        <ImageView
+            android:id="@+id/btnRacha"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:clickable="true"
+            android:contentDescription="Racha de Premios"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_records" />
+    </LinearLayout>
+
+    <!-- Fila 3: Cofre Especial (izquierda) y Eventos (derecha) -->
+    <LinearLayout
+        android:id="@+id/layoutCofre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-80dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="-10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutMisiones">
+
+        <ImageView
+            android:id="@+id/btnCofre"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:clickable="true"
+            android:contentDescription="Cofre Especial"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_info" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutEventos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v50"
+        app:layout_constraintTop_toBottomOf="@+id/layoutRacha">
+
+        <ImageView
+            android:id="@+id/btnEventos"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:clickable="true"
+            android:contentDescription="Eventos"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_intrucciones" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/ivCentralGif"
+        android:layout_width="188dp"
+        android:layout_height="263dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnJugar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnJugar"
+        android:layout_width="317dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:contentDescription="Jugar"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_jugar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

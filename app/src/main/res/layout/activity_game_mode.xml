@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo_menu"
+    tools:context=".GameModeActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="40dp"
+        android:text="ESCOGE TU MODO"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.02"
+        android:shadowColor="#80000000"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:shadowRadius="6"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnOffline"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="80dp"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_offline"
+        android:transitionName="offlineButton"
+        app:layout_constraintBottom_toTopOf="@+id/btnMultiplayer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <ImageView
+        android:id="@+id/btnMultiplayer"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="90dp"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_multiplayer"
+        android:transitionName="multiplayerButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnOffline" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

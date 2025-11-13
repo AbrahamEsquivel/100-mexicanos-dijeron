@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/btn_menu_card_background"> <TextView
+    android:id="@+id/tvAlertMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="¡Mensaje de alerta!"
+    android:textColor="@android:color/white"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnAlertOK"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="OK"
+        android:background="@drawable/btn_jugar_background"
+        android:textColor="#3E2723"
+        android:textStyle="bold"/>
+</LinearLayout>

@@ -1,0 +1,389 @@
+{
+  "categorias": [
+    {
+      "nombre": "Objetos",
+      "preguntas": [
+        {
+          "pregunta": "Objeto que usamos para protegernos de la lluvia",
+          "respuestas": [
+            { "texto": "Paraguas", "puntos": 50 },
+            { "texto": "Impermeable", "puntos": 30 },
+            { "texto": "Sombrilla", "puntos": 15 },
+            { "texto": "Gorro", "puntos": 8 },
+            { "texto": "Botas", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Herramienta que sirve para martillar clavos",
+          "respuestas": [
+            { "texto": "Martillo", "puntos": 55 },
+            { "texto": "Mazo", "puntos": 25 },
+            { "texto": "Almádena", "puntos": 15 },
+            { "texto": "Destornillador", "puntos": 8 },
+            { "texto": "Alicate", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para ver la hora",
+          "respuestas": [
+            { "texto": "Reloj", "puntos": 60 },
+            { "texto": "Teléfono", "puntos": 25 },
+            { "texto": "Cronómetro", "puntos": 15 },
+            { "texto": "Despertador", "puntos": 8 },
+            { "texto": "Smartwatch", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para cortar papel",
+          "respuestas": [
+            { "texto": "Tijeras", "puntos": 55 },
+            { "texto": "Cutter", "puntos": 25 },
+            { "texto": "Navaja", "puntos": 15 },
+            { "texto": "Cúter", "puntos": 8 },
+            { "texto": "Estilete", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para sentarnos",
+          "respuestas": [
+            { "texto": "Silla", "puntos": 60 },
+            { "texto": "Banco", "puntos": 25 },
+            { "texto": "Taburete", "puntos": 15 },
+            { "texto": "Butaca", "puntos": 8 },
+            { "texto": "Puf", "puntos": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Comida",
+      "preguntas": [
+        {
+          "pregunta": "Fruta que por fuera es verde y por dentro roja",
+          "respuestas": [
+            { "texto": "Sandía", "puntos": 45 },
+            { "texto": "Manzana Verde", "puntos": 20 },
+            { "texto": "Guayaba", "puntos": 15 },
+            { "texto": "Pera", "puntos": 10 },
+            { "texto": "Uva Verde", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Platillo mexicano que se come en la mañana",
+          "respuestas": [
+            { "texto": "Chilaquiles", "puntos": 50 },
+            { "texto": "Huevos Rancheros", "puntos": 30 },
+            { "texto": "Molletes", "puntos": 15 },
+            { "texto": "Huevos Motuleños", "puntos": 10 },
+            { "texto": "Enchiladas", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Fruta cítrica de color naranja",
+          "respuestas": [
+            { "texto": "Naranja", "puntos": 55 },
+            { "texto": "Mandarina", "puntos": 25 },
+            { "texto": "Toronja", "puntos": 15 },
+            { "texto": "Lima", "puntos": 10 },
+            { "texto": "Limón", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Tipo de carne que viene del cerdo",
+          "respuestas": [
+            { "texto": "Puerco", "puntos": 50 },
+            { "texto": "Jamón", "puntos": 25 },
+            { "texto": "Tocino", "puntos": 15 },
+            { "texto": "Chuleta", "puntos": 10 },
+            { "texto": "Salchicha", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Verdura de color naranja que crece bajo tierra",
+          "respuestas": [
+            { "texto": "Zanahoria", "puntos": 60 },
+            { "texto": "Camote", "puntos": 25 },
+            { "texto": "Calabaza", "puntos": 15 },
+            { "texto": "Papa", "puntos": 10 },
+            { "texto": "Rábano", "puntos": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Cultura Pop",
+      "preguntas": [
+        {
+          "pregunta": "Superhéroe que lleva una capa y tiene una 'S' en el pecho",
+          "respuestas": [
+            { "texto": "Superman", "puntos": 60 },
+            { "texto": "Supergirl", "puntos": 25 },
+            { "texto": "Shazam", "puntos": 15 },
+            { "texto": "Hombre de Acero", "puntos": 10 },
+            { "texto": "Kal-El", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Cantante famosa conocida como 'La Reina del Pop'",
+          "respuestas": [
+            { "texto": "Madonna", "puntos": 55 },
+            { "texto": "Britney Spears", "puntos": 25 },
+            { "texto": "Lady Gaga", "puntos": 15 },
+            { "texto": "Beyoncé", "puntos": 10 },
+            { "texto": "Taylor Swift", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Película de superhéroes de Marvel",
+          "respuestas": [
+            { "texto": "Avengers", "puntos": 50 },
+            { "texto": "Iron Man", "puntos": 25 },
+            { "texto": "Spider-Man", "puntos": 15 },
+            { "texto": "Black Panther", "puntos": 10 },
+            { "texto": "Thor", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Serie de televisión sobre un profesor de química",
+          "respuestas": [
+            { "texto": "Breaking Bad", "puntos": 65 },
+            { "texto": "Better Call Saul", "puntos": 25 },
+            { "texto": "The Wire", "puntos": 15 },
+            { "texto": "Narcos", "puntos": 10 },
+            { "texto": "Ozark", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Grupo musical británico de los años 60",
+          "respuestas": [
+            { "texto": "The Beatles", "puntos": 70 },
+            { "texto": "Rolling Stones", "puntos": 25 },
+            { "texto": "Queen", "puntos": 15 },
+            { "texto": "Led Zeppelin", "puntos": 10 },
+            { "texto": "Pink Floyd", "puntos": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Geografía",
+      "preguntas": [
+        {
+          "pregunta": "País que tenga una pirámide famosa",
+          "respuestas": [
+            { "texto": "Egipto", "puntos": 60 },
+            { "texto": "México", "puntos": 30 },
+            { "texto": "Guatemala", "puntos": 15 },
+            { "texto": "Sudán", "puntos": 10 },
+            { "texto": "Perú", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Océano más grande del mundo",
+          "respuestas": [
+            { "texto": "Océano Pacífico", "puntos": 65 },
+            { "texto": "Océano Atlántico", "puntos": 20 },
+            { "texto": "Océano Índico", "puntos": 15 },
+            { "texto": "Océano Ártico", "puntos": 10 },
+            { "texto": "Océano Antártico", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "País más grande del mundo por territorio",
+          "respuestas": [
+            { "texto": "Rusia", "puntos": 70 },
+            { "texto": "Canadá", "puntos": 25 },
+            { "texto": "China", "puntos": 15 },
+            { "texto": "Estados Unidos", "puntos": 10 },
+            { "texto": "Brasil", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Capital de Francia",
+          "respuestas": [
+            { "texto": "París", "puntos": 60 },
+            { "texto": "Lyon", "puntos": 25 },
+            { "texto": "Marsella", "puntos": 15 },
+            { "texto": "Burdeos", "puntos": 10 },
+            { "texto": "Niza", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Río más largo del mundo",
+          "respuestas": [
+            { "texto": "Nilo", "puntos": 55 },
+            { "texto": "Amazonas", "puntos": 30 },
+            { "texto": "Misisipi", "puntos": 15 },
+            { "texto": "Yangtsé", "puntos": 10 },
+            { "texto": "Danubio", "puntos": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Ciencia",
+      "preguntas": [
+        {
+          "pregunta": "Planeta conocido como 'el planeta rojo'",
+          "respuestas": [
+            { "texto": "Marte", "puntos": 70 },
+            { "texto": "Júpiter", "puntos": 15 },
+            { "texto": "Saturno", "puntos": 10 },
+            { "texto": "Venus", "puntos": 8 },
+            { "texto": "Mercurio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Partícula más pequeña de un elemento químico",
+          "respuestas": [
+            { "texto": "Átomo", "puntos": 60 },
+            { "texto": "Molécula", "puntos": 25 },
+            { "texto": "Electrón", "puntos": 15 },
+            { "texto": "Protón", "puntos": 10 },
+            { "texto": "Neutrón", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Gas que respiran los seres humanos",
+          "respuestas": [
+            { "texto": "Oxígeno", "puntos": 65 },
+            { "texto": "Nitrógeno", "puntos": 20 },
+            { "texto": "Dióxido de carbono", "puntos": 15 },
+            { "texto": "Hidrógeno", "puntos": 10 },
+            { "texto": "Helio", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Órgano del cuerpo humano que bombea sangre",
+          "respuestas": [
+            { "texto": "Corazón", "puntos": 70 },
+            { "texto": "Pulmón", "puntos": 20 },
+            { "texto": "Hígado", "puntos": 15 },
+            { "texto": "Riñón", "puntos": 10 },
+            { "texto": "Estómago", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Fuerza que nos mantiene pegados a la Tierra",
+          "respuestas": [
+            { "texto": "Gravedad", "puntos": 75 },
+            { "texto": "Magnetismo", "puntos": 20 },
+            { "texto": "Fricción", "puntos": 15 },
+            { "texto": "Inercia", "puntos": 10 },
+            { "texto": "Presión", "puntos": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Arte",
+      "preguntas": [
+        {
+          "pregunta": "Pintor que se cortó una oreja",
+          "respuestas": [
+            { "texto": "Vincent van Gogh", "puntos": 65 },
+            { "texto": "Pablo Picasso", "puntos": 20 },
+            { "texto": "Salvador Dalí", "puntos": 15 },
+            { "texto": "Claude Monet", "puntos": 10 },
+            { "texto": "Edvard Munch", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Instrumento musical con teclas blancas y negras",
+          "respuestas": [
+            { "texto": "Piano", "puntos": 55 },
+            { "texto": "Órgano", "puntos": 25 },
+            { "texto": "Sintetizador", "puntos": 15 },
+            { "texto": "Acordeón", "puntos": 10 },
+            { "texto": "Clavecín", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Pintura famosa de Leonardo da Vinci",
+          "respuestas": [
+            { "texto": "Mona Lisa", "puntos": 70 },
+            { "texto": "La Última Cena", "puntos": 25 },
+            { "texto": "Hombre de Vitruvio", "puntos": 15 },
+            { "texto": "La Gioconda", "puntos": 10 },
+            { "texto": "Virgen de las Rocas", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Escultor de 'El David'",
+          "respuestas": [
+            { "texto": "Miguel Ángel", "puntos": 60 },
+            { "texto": "Donatello", "puntos": 25 },
+            { "texto": "Bernini", "puntos": 15 },
+            { "texto": "Rodin", "puntos": 10 },
+            { "texto": "Canova", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Instrumento de cuerda con arco",
+          "respuestas": [
+            { "texto": "Violín", "puntos": 55 },
+            { "texto": "Viola", "puntos": 25 },
+            { "texto": "Chelo", "puntos": 15 },
+            { "texto": "Contrabajo", "puntos": 10 },
+            { "texto": "Violín eléctrico", "puntos": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Deportes",
+      "preguntas": [
+        {
+          "pregunta": "Menciona un deporte que use una pelota",
+          "respuestas": [
+            { "texto": "Fútbol", "puntos": 52 },
+            { "texto": "Básquetbol", "puntos": 28 },
+            { "texto": "Béisbol", "puntos": 15 },
+            { "texto": "Tenis", "puntos": 10 },
+            { "texto": "Voleibol", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Deporte que se juega sobre hielo con patines",
+          "respuestas": [
+            { "texto": "Hockey sobre hielo", "puntos": 50 },
+            { "texto": "Patinaje artístico", "puntos": 30 },
+            { "texto": "Curling", "puntos": 15 },
+            { "texto": "Patinaje de velocidad", "puntos": 10 },
+            { "texto": "Bobsleigh", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Deporte de raqueta que se juega individual",
+          "respuestas": [
+            { "texto": "Tenis", "puntos": 55 },
+            { "texto": "Bádminton", "puntos": 25 },
+            { "texto": "Squash", "puntos": 15 },
+            { "texto": "Frontón", "puntos": 10 },
+            { "texto": "Pádel", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Deporte acuático con tabla",
+          "respuestas": [
+            { "texto": "Surf", "puntos": 60 },
+            { "texto": "Windsurf", "puntos": 25 },
+            { "texto": "Kitesurf", "puntos": 15 },
+            { "texto": "Bodyboard", "puntos": 10 },
+            { "texto": "Paddle surf", "puntos": 8 }
+          ]
+        },
+        {
+          "pregunta": "Deporte de combate con guantes",
+          "respuestas": [
+            { "texto": "Boxeo", "puntos": 65 },
+            { "texto": "MMA", "puntos": 25 },
+            { "texto": "Kickboxing", "puntos": 15 },
+            { "texto": "Muay Thai", "puntos": 10 },
+            { "texto": "Karate", "puntos": 8 }
+          ]
+        }
+      ]
+    }
+  ]
+}

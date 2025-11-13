@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:keepScreenOn="true"
+    android:background="#1A1A1A">
+
+    <!-- Botón Jugador -->
+    <Button
+        android:id="@+id/btnPlayerBuzzer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        android:background="@drawable/btn_player_buzzer"
+        android:text="¡PRESIONA!\nTÚ TURNO"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:stateListAnimator="@null"
+        android:elevation="8dp"
+        android:fontFamily="sans-serif-black"/>
+
+    <!-- Divisor con efecto neón -->
+    <View
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/divider_glow"
+        android:layout_marginVertical="20dp"/>
+
+    <!-- Botón Máquina -->
+    <Button
+        android:id="@+id/btnMachineBuzzer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="8dp"
+        android:background="@drawable/btn_machine_buzzer"
+        android:text="MÁQUINA\nRIVAL"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:stateListAnimator="@null"
+        android:elevation="8dp"
+        android:fontFamily="sans-serif-black"/>
+
+</LinearLayout>
