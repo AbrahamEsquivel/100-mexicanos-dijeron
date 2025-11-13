@@ -8,21 +8,86 @@
     android:background="@drawable/fondo_menu"
     tools:context=".MultiplayerLobbyActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOBBY MULTIJUGADOR\n(Próximamente)"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:shadowColor="#000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android.layout_marginTop="16dp"
+        android:src="@android:drawable/ic_menu_revert"
+        app:tint="@android:color/white"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="MULTIJUGADOR"
+        android:textColor="#FFC107"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnBack"
+        app:layout_constraintBottom_toBottomOf="@+id/btnBack" />
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/btnHostGame"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="CREAR PARTIDA"
+            android:background="@drawable/btn_jugar_background"
+            android:textColor="#3E2723"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnDiscoverGames"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="BUSCAR PARTIDA"
+            android:background="@drawable/btn_jugar_background"
+            android:textColor="#3E2723"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbSearching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/llButtons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFoundGames"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/pbSearching"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_found_game" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
