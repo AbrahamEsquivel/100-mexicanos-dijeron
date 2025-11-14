@@ -8,6 +8,7 @@ import android.widget.Toast // <-- ¡¡IMPORT AÑADIDO!!
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cienmexicanosdijeron.databinding.ActivityMultiplayerLobbyBinding
 import android.content.Context
+import android.content.Intent
 import android.net.nsd.NsdManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.lifecycleScope
+import java.io.DataInputStream
+import java.io.DataOutputStream
 
 class MultiplayerLobbyActivity : AppCompatActivity() {
 
@@ -156,35 +159,48 @@ class MultiplayerLobbyActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // 1. Abrimos el puerto
+                // 1. Abrimos puerto y publicamos (como antes)
                 serverSocket = ServerSocket(0)
                 val port = serverSocket!!.localPort
-
-                // 2. ¡¡CAMBIO AQUÍ!!
-                // Le decimos al hilo principal que publique este puerto
                 withContext(Dispatchers.Main) {
-                    registerService(port) // <-- ¡LA LLAMAMOS!
+                    registerService(port)
                 }
 
-                // 3. (Esto se queda igual)
-                // Nos quedamos esperando a que alguien se conecte
-                while (true) {
-                    val clientSocket = serverSocket!!.accept()
+                // 2. Esperamos al cliente
+                val clientSocket = serverSocket!!.accept()
+                ConnectionManager.setHostSocket(clientSocket)
+                val clientName = ConnectionManager.dataIn?.readUTF() ?: "Invitado"
 
-                    withContext(Dispatchers.Main) {
-                        toast("¡Un jugador se ha conectado!")
-                        // TODO: Iniciar el juego
+                // 3. ¡¡CAMBIO AQUÍ!!
+                // (Avisamos al Host en la UI)
+                withContext(Dispatchers.Main) {
+                    toast("¡'$clientName' se ha conectado!")
+                    if (registrationListener != null) {
+                        try { nsdManager?.unregisterService(registrationListener) }
+                        catch (e: Exception) { e.printStackTrace() }
                     }
+                    binding.btnHostGame.text = "¡JUGADOR ENCONTRADO!"
                 }
+
+                // 4. ¡¡NUEVO!! Enviamos la orden de empezar
+                ConnectionManager.dataOut?.writeUTF("START_GAME")
+                ConnectionManager.dataOut?.flush()
+
+                // 5. ¡¡NUEVO!! Iniciamos la pantalla de la Ruleta (para el Host)
+                withContext(Dispatchers.Main) {
+                    val intent =
+                        Intent(this@MultiplayerLobbyActivity, SpinWheelActivity::class.java)
+                    intent.putExtra("IS_MULTIPLAYER", true)
+                    intent.putExtra("IS_HOST", true)
+                    intent.putExtra("OPPONENT_NAME", clientName) // Le pasamos el nombre del rival
+                    startActivity(intent)
+                    finish() // Cerramos el Lobby
+                }
+
+                serverSocket?.close()
 
             } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    toast("Error al iniciar el Host: ${e.message}")
-                    binding.btnHostGame.isEnabled = true
-                    binding.btnDiscoverGames.isEnabled = true
-                    binding.pbSearching.visibility = View.GONE
-                }
+                // ... (el 'catch' se queda igual)
             }
         }
     }
@@ -245,29 +261,53 @@ class MultiplayerLobbyActivity : AppCompatActivity() {
         }
     }
 
+    // En MultiplayerLobbyActivity.kt
+
+    /**
+     * MODIFICADA: Ahora el Cliente ENVÍA su nombre al Host
+     */
     private fun initializeResolveListener(): NsdManager.ResolveListener {
         return object : NsdManager.ResolveListener {
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                // ¡ÉXITO! Ya tenemos la IP y el Puerto
                 val host = serviceInfo.host
                 val port = serviceInfo.port
 
-                // ¡¡AQUÍ VIENE EL CAMBIO!!
-                // Tenemos que conectarnos en un hilo de fondo (IO)
                 lifecycleScope.launch(Dispatchers.IO) {
                     try {
-                        // 1. ¡Creamos el Socket y nos conectamos!
-                        clientSocket = Socket(host, port)
+                        // 1. Nos conectamos y guardamos (como antes)
+                        val clientSocket = Socket(host, port)
+                        ConnectionManager.setClientSocket(clientSocket)
 
-                        // 2. Si llegamos aquí, ¡lo logramos!
-                        // Avisamos al usuario en el hilo principal (Main)
+                        // 2. Enviamos nuestro nombre (como antes)
+                        ConnectionManager.dataOut?.writeUTF(playerName)
+                        ConnectionManager.dataOut?.flush()
+
+                        // 3. Avisamos al usuario que estamos "Esperando"
                         withContext(Dispatchers.Main) {
-                            toast("¡Conectado al Host!")
-                            // TODO: Aquí es donde enviaremos nuestro nombre
+                            toast("¡Conectado! Esperando a que el Host inicie...")
+                            stopDiscovery()
+                            binding.btnDiscoverGames.text = "¡CONECTADO!"
+                            binding.btnHostGame.isEnabled = false
                         }
 
-                    } catch (e: Exception) {
+                        // 4. ¡¡NUEVO!! Nos quedamos escuchando la orden del Host
+                        val command = ConnectionManager.dataIn?.readUTF()
+
+                        if (command == "START_GAME") {
+                            // ¡Recibimos la orden!
+                            // 5. ¡¡NUEVO!! Iniciamos la Ruleta (para el Cliente)
+                            withContext(Dispatchers.Main) {
+                                val intent = Intent(this@MultiplayerLobbyActivity, SpinWheelActivity::class.java)
+                                intent.putExtra("IS_MULTIPLAYER", true)
+                                intent.putExtra("IS_HOST", false)
+                                intent.putExtra("OPPONENT_NAME", serviceInfo.serviceName) // El nombre del Host
+                                startActivity(intent)
+                                finish() // Cerramos el Lobby
+                            }
+                        }
+
+                    }catch (e: Exception) {
                         e.printStackTrace()
                         withContext(Dispatchers.Main) {
                             toast("Error al conectarse: ${e.message}")
@@ -283,7 +323,6 @@ class MultiplayerLobbyActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun startDiscovery() {
         // Preparamos los botones
         binding.btnHostGame.isEnabled = false
@@ -333,21 +372,16 @@ class MultiplayerLobbyActivity : AppCompatActivity() {
         super.onDestroy()
         stopDiscovery()
 
-        // Damos de baja el servicio NSD (si éramos Host)
         if (registrationListener != null) {
             try { nsdManager?.unregisterService(registrationListener) }
             catch (e: Exception) { e.printStackTrace() }
         }
+        try { serverSocket?.close() }
+        catch (e: Exception) { e.printStackTrace() }
 
-        // Cerramos el ServerSocket (si éramos Host)
-        try {
-            serverSocket?.close()
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // ¡¡NUEVO!! Cerramos el Socket del Cliente (si éramos Cliente)
-        try {
-            clientSocket?.close()
-        } catch (e: Exception) { e.printStackTrace() }
+        // ¡¡CAMBIO AQUÍ!!
+        // Le decimos al guardián que cierre todo
+        //ConnectionManager.closeConnections()
     }
 
     // ¡¡FUNCIÓN AÑADIDA AQUÍ!!
