@@ -35,6 +35,8 @@ import org.json.JSONObject
 import java.text.Normalizer
 import kotlin.random.Random
 import android.widget.TextView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class GamePlayActivity : AppCompatActivity() {
 
@@ -71,6 +73,14 @@ class GamePlayActivity : AppCompatActivity() {
     private var botName: String = "Bot"
     private var playerName: String = "Jugador"
 
+    // ¡¡NUEVAS VARIABLES DE MULTIJUGADOR!!
+    private var isMultiplayer = false
+    private var isHost = false
+    private var clientListenerJob: Job? = null // El "oído" del Cliente
+
+    // ¡¡NUEVA!! El "oído" del Host para el BUZZER
+    private var hostBuzzerListenerJob: Job? = null
+
     private val sillyAnswers = listOf(
         "¿Pato?",
         "No sé, ¿Uvas?",
@@ -98,38 +108,200 @@ class GamePlayActivity : AppCompatActivity() {
         binding = ActivityGamePlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        hideSystemUI() // Oculta barras de sistema
-
+        hideSystemUI()
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?
         setupSounds()
 
+        // --- ¡¡LÓGICA HÍBRIDA!! ---
 
+        // 1. Leemos las variables del Intent
+        isMultiplayer = intent.getBooleanExtra("IS_MULTIPLAYER", false)
+        isHost = intent.getBooleanExtra("IS_HOST", false)
+        val opponentName = intent.getStringExtra("OPPONENT_NAME") ?: "Bot"
         val categoryName = intent.getStringExtra("SELECTED_CATEGORY") ?: "Sin Categoría"
 
-        botName = intent.getStringExtra("BOT_NAME") ?: "Bot"
+        // 2. Guardamos los nombres (para el historial)
         val sp = getSharedPreferences("GamePrefs", Context.MODE_PRIVATE)
         playerName = sp.getString("PlayerName", "Jugador") ?: "Jugador"
-        // 2. Cargamos la pregunta COMPLETA
+        botName = opponentName // En multi, el "botName" es nuestro oponente
+
+        // 3. Configuramos el botón de micrófono (siempre lo necesitamos)
+        setupMicButton()
+
+        // 4. Decidimos cómo empezar
+        if (isMultiplayer) {
+            if (isHost) {
+                // Soy el Host: Tengo que cargar la pregunta y enviarla
+                initializeHostGame(categoryName)
+            } else {
+                // Soy el Cliente: Tengo que esperar a que el Host me diga la pregunta
+                initializeClientGame()
+            }
+        } else {
+            // MODO OFFLINE: Hacemos lo de siempre
+            initializeOfflineGame(categoryName)
+        }
+    }
+
+    private fun initializeOfflineGame(categoryName: String) {
+        // 1. Carga la pregunta
         currentQuestionData = loadQuestionForCategory(categoryName)
 
         if (currentQuestionData != null) {
-            // Mostramos la pregunta
+            // 2. Muestra la pregunta
             binding.tvQuestion.text = currentQuestionData!!.question
-
-            // 3. Configuramos el RecyclerView (la lista de respuestas)
+            // 3. Configura el tablero
             setupRecyclerView()
-
-            // 4. ¡Lanzamos el pop-up del buzzer!
+            // 4. Inicia el buzzer
             showFaceOffDialog()
         } else {
             binding.tvQuestion.text = "Error: No se encontró pregunta para $categoryName"
         }
-
-        // 5. Configurar el botón de micrófono
-        setupMicButton()
     }
 
+    /**
+     * NUEVA: Inicia el juego como HOST (Servidor)
+     */
+    private fun initializeHostGame(categoryName: String) {
+        // 1. El Host carga la pregunta
+        currentQuestionData = loadQuestionForCategory(categoryName)
+
+        if (currentQuestionData != null) {
+            binding.tvQuestion.text = currentQuestionData!!.question
+            setupRecyclerView()
+
+            // 2. El Host ENVÍA la pregunta al Cliente
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    // Mandamos la pregunta (que incluye las respuestas)
+                    val questionJson = convertQuestionDataToJson(currentQuestionData!!)
+                    ConnectionManager.dataOut?.writeUTF("QUESTION::SEP::$questionJson")
+                    ConnectionManager.dataOut?.flush()
+
+                    // 3. Ahora que el Cliente sabe, iniciamos el buzzer
+                    withContext(Dispatchers.Main) {
+                        showFaceOffDialog() // <-- Esto AHORA iniciará el listener del Host
+                    }
+
+                    // ¡¡BORRAMOS ESTAS LÍNEAS DE AQUÍ!!
+                    // val clientCommand = ConnectionManager.dataIn?.readUTF()
+                    // if(clientCommand == "BUZZ" && !isFaceOffWon) {
+                    // ...
+                    // }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        toast("Error al enviar pregunta: ${e.message}")
+                    }
+                }
+            }
+        } else {
+            // TODO: Avisar al cliente que hubo un error
+            binding.tvQuestion.text = "Error: No se encontró pregunta para $categoryName"
+        }
+    }
+
+    /**
+     * NUEVA: Inicia el juego como CLIENTE (Espejo)
+     */
+    private fun initializeClientGame() {
+        toast("Conectado. Esperando pregunta del Host...")
+        binding.btnMic.visibility = View.GONE
+
+        clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // 1. Espera la pregunta (como antes)
+                val questionCommand = ConnectionManager.dataIn?.readUTF()
+
+                if (questionCommand != null && questionCommand.startsWith("QUESTION::SEP::")) {
+
+                    // ¡¡AQUÍ ESTÁ LA CORRECCIÓN!!
+                    // Debe decir 'questionCommand', no 'command'
+                    val questionJson = questionCommand.substringAfter("QUESTION::SEP::")
+
+                    currentQuestionData = parseQuestionDataFromJson(questionJson)
+
+                    withContext(Dispatchers.Main) {
+                        if (currentQuestionData != null) {
+                            binding.tvQuestion.text = currentQuestionData!!.question
+                            setupRecyclerView()
+                            showFaceOffDialog() // Muestra el buzzer (del Cliente)
+                        } else {
+                            toast("Error al recibir la pregunta.")
+                        }
+                    }
+
+                    // 2. Ahora esta corutina SE QUEDA ESCUCHANDO el resultado
+                    val resultCommand = ConnectionManager.dataIn?.readUTF()
+
+                    if (resultCommand == "YOU_WIN") {
+                        // ¡Gané!
+                        withContext(Dispatchers.Main) {
+                            faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
+                            toast("¡Ganaste el turno!")
+                            startPlayerTurn()
+                        }
+                    } else if (resultCommand == "YOU_LOSE") {
+                        // Perdí
+                        withContext(Dispatchers.Main) {
+                            faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
+                            toast("¡'$botName' ganó el turno!")
+                            startMachineTurn()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    toast("¡Error de conexión con el Host!")
+                    // TODO: Volver al menú
+                }
+            }
+        }
+    }
+
+    private fun convertQuestionDataToJson(data: QuestionData): String {
+        val questionJson = JSONObject()
+        questionJson.put("pregunta", data.question)
+
+        val answersJsonArray = org.json.JSONArray()
+        data.answers.forEach { answer ->
+            val answerJson = JSONObject()
+            answerJson.put("texto", answer.text)
+            answerJson.put("puntos", answer.points)
+            answersJsonArray.put(answerJson)
+        }
+        questionJson.put("respuestas", answersJsonArray)
+
+        return questionJson.toString()
+    }
+
+    /**
+     * NUEVA: Convierte un String de JSON de vuelta a nuestro objeto QuestionData
+     */
+    private fun parseQuestionDataFromJson(jsonString: String): QuestionData? {
+        return try {
+            val questionJson = JSONObject(jsonString)
+            val questionText = questionJson.getString("pregunta")
+
+            val answersJsonArray = questionJson.getJSONArray("respuestas")
+            val answersList = mutableListOf<Answer>()
+            for (j in 0 until answersJsonArray.length()) {
+                val answerObj = answersJsonArray.getJSONObject(j)
+                answersList.add(
+                    Answer(
+                        answerObj.getString("texto"),
+                        answerObj.getInt("puntos")
+                    )
+                )
+            }
+            QuestionData(questionText, answersList)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
     private fun saveGameResult(winner: String, score: Int) {
         // Obtenemos la fecha y hora
         val sdf = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
@@ -219,37 +391,145 @@ class GamePlayActivity : AppCompatActivity() {
         val btnPlayerBuzzer = dialogView.findViewById<Button>(R.id.btnPlayerBuzzer)
         val btnMachineBuzzer = dialogView.findViewById<Button>(R.id.btnMachineBuzzer)
 
+        // --- Lógica del Jugador (TÚ) ---
         btnPlayerBuzzer.setOnClickListener {
             if (!isFaceOffWon) {
-                isFaceOffWon = true
-                machineAITask?.cancel()
-                btnPlayerBuzzer.isPressed = true
-                btnPlayerBuzzer.text = "¡GANASTE!\nPRIMERO"
-
-                lifecycleScope.launch {
-                    delay(1000)
-                    faceOffDialog?.dismiss()
-                    startPlayerTurn()
+                if (isMultiplayer && !isHost) {
+                    // --- SOY CLIENTE (ONLINE) ---
+                    isFaceOffWon = true
+                    btnPlayerBuzzer.isPressed = true
+                    btnPlayerBuzzer.text = "¡PRESIONADO!"
+                    btnPlayerBuzzer.isEnabled = false
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        ConnectionManager.dataOut?.writeUTF("BUZZ")
+                        ConnectionManager.dataOut?.flush()
+                    }
+                } else {
+                    // --- SOY OFFLINE o HOST (ONLINE) ---
+                    handleBuzzerResult(didPlayerWin = true)
                 }
             }
         }
 
-        btnMachineBuzzer.isClickable = false
-        machineAITask = lifecycleScope.launch {
-            delay(Random.nextLong(1000, 4000))
-            if (!isFaceOffWon) {
-                isFaceOffWon = true
-                btnMachineBuzzer.isPressed = true
-                btnMachineBuzzer.text = "¡GANÓ!\nPRIMERO"
+        // --- Lógica del Oponente (IA o Cliente) ---
+        if (isMultiplayer) {
+            // --- MODO MULTIJUGADOR ---
+            btnMachineBuzzer.isClickable = false
+            btnMachineBuzzer.alpha = 0.5f
+            btnMachineBuzzer.text = "@$botName"
 
-                lifecycleScope.launch {
-                    delay(1000)
-                    faceOffDialog?.dismiss()
-                    startMachineTurn()
+            if (isHost) {
+                // ¡¡LISTENER DEL HOST!! (Esto estaba bien)
+                // Si soy el Host, me pongo a escuchar el "BUZZ"
+                hostBuzzerListenerJob?.cancel()
+                hostBuzzerListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val clientCommand = ConnectionManager.dataIn?.readUTF()
+                        if (clientCommand == "BUZZ" && !isFaceOffWon) {
+                            withContext(Dispatchers.Main) {
+                                handleBuzzerResult(didPlayerWin = false, isClientWinner = true)
+                            }
+                        }
+                    } catch (e: Exception) { /* (El socket se cerró, no pasa nada) */ }
+                }
+            } else {
+                // ¡¡NUEVO LISTENER DEL CLIENTE!!
+                // Si soy el Cliente, me pongo a escuchar el "RESULTADO"
+                clientListenerJob?.cancel()
+                clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val resultCommand = ConnectionManager.dataIn?.readUTF()
+                        if (resultCommand == "YOU_WIN") {
+                            withContext(Dispatchers.Main) {
+                                faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
+                                toast("¡Ganaste el turno!")
+                                startPlayerTurn()
+                            }
+                        } else if (resultCommand == "YOU_LOSE") {
+                            withContext(Dispatchers.Main) {
+                                faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
+                                toast("¡'$botName' ganó el turno!")
+                                startMachineTurn()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            toast("Error de conexión con '$botName'")
+                        }
+                    }
+                }
+            }
+
+        } else {
+            // --- MODO OFFLINE ---
+            // (La lógica de la IA se queda igual)
+            btnMachineBuzzer.isClickable = false
+            btnMachineBuzzer.text = "MÁQUINA"
+            machineAITask?.cancel()
+            machineAITask = lifecycleScope.launch {
+                delay(Random.nextLong(1000, 4000))
+                if (!isFaceOffWon) {
+                    handleBuzzerResult(didPlayerWin = false) // La IA gana
                 }
             }
         }
+
         faceOffDialog?.show()
+    }
+
+    private fun handleBuzzerResult(didPlayerWin: Boolean, isClientWinner: Boolean = false) {
+        if (isFaceOffWon) return
+        isFaceOffWon = true
+        machineAITask?.cancel() // Matamos la IA (si estaba en modo Offline)
+
+        // ¡¡FIX IMPORTANTE!!
+        // Matamos el "oído" del Host para que no se quede atorado
+        hostBuzzerListenerJob?.cancel()
+
+        val btnPlayer = faceOffDialog?.findViewById<Button>(R.id.btnPlayerBuzzer)
+        val btnMachine = faceOffDialog?.findViewById<Button>(R.id.btnMachineBuzzer)
+
+        lifecycleScope.launch {
+            if (isClientWinner) {
+                // --- GANÓ EL CLIENTE ---
+                toast("¡'$botName' ganó el turno!")
+                launch(Dispatchers.IO) {
+                    ConnectionManager.dataOut?.writeUTF("YOU_WIN")
+                    ConnectionManager.dataOut?.flush()
+                }
+                delay(1000)
+                faceOffDialog?.dismiss() // Host (Perdedor) se cierra
+                startMachineTurn()
+
+            } else if (didPlayerWin) {
+                // --- GANÓ EL JUGADOR (HOST) ---
+                btnPlayer?.isPressed = true
+                btnPlayer?.text = "¡GANASTE!\nPRIMERO"
+                toast("¡Ganaste el turno!")
+
+                if(isMultiplayer) { // Si es multi, avisamos al Cliente
+                    launch(Dispatchers.IO) {
+                        ConnectionManager.dataOut?.writeUTF("YOU_LOSE")
+                        ConnectionManager.dataOut?.flush()
+                    }
+                }
+                delay(1000)
+                faceOffDialog?.dismiss() // Host (Ganador) se cierra
+                startPlayerTurn()
+
+            } else {
+                // --- GANÓ LA MÁQUINA (IA) ---
+                btnMachine?.isPressed = true
+                btnMachine?.text = "¡GANÓ!\nPRIMERO"
+                toast("¡La máquina ganó el turno!")
+
+                // (No necesitamos enviar nada en Offline)
+
+                delay(1000)
+                faceOffDialog?.dismiss() // Host (Perdedor) se cierra
+                startMachineTurn()
+            }
+        }
     }
 
     // --- NUEVA: Configura la lista vacía ---
@@ -262,11 +542,16 @@ class GamePlayActivity : AppCompatActivity() {
 
     // --- MODIFICADA: Activa el botón de Mic ---
     private fun startPlayerTurn() {
-        toast("¡Tu turno! Piensa tu respuesta...")
-        binding.btnMic.visibility = View.VISIBLE
+        isPlayerTurn = true // ¡Mi turno!
+        isStealAttempt = false
+        playerStrikes = 0
+        resetStrikeUI()
 
-        // ¡¡CAMBIO AQUÍ!!
-        startThinkingTimer() // Inicia el contador de 5 seg para pensar
+        binding.btnMic.visibility = View.VISIBLE
+        binding.btnMic.isEnabled = true // Aseguramos que esté activo
+        toast("¡Tu turno! Piensa tu respuesta...")
+
+        startThinkingTimer() // Inicia el timer de pensar
     }
 
     // En GamePlayActivity.kt
@@ -393,10 +678,95 @@ class GamePlayActivity : AppCompatActivity() {
         isStealAttempt = false
         machineStrikes = 0
         resetStrikeUI()
-        binding.btnMic.visibility = View.GONE
 
-        // La máquina empieza a adivinar
-        machineMakesAGuess()
+        // --- ¡¡FIX A LA FUERZA 2.0!! ---
+        // 1. Nos aseguramos de que el buzzer SÍ se cierre
+        faceOffDialog?.dismiss()
+
+        // 2. FORZAMOS el redibujado volviendo a poner los datos
+        if (currentQuestionData != null) {
+            binding.tvQuestion.text = currentQuestionData!!.question
+            binding.rvAnswers.adapter = answerAdapter // Volver a setear el adapter
+
+            // Y nos aseguramos de que sean visibles
+            binding.tvQuestion.visibility = View.VISIBLE
+            binding.rvAnswers.visibility = View.VISIBLE
+        }
+        // --- FIN DEL FIX ---
+
+        // 3. Apagamos todos los controles locales (esto estaba bien)
+        binding.btnMic.visibility = View.GONE
+        thinkingTimer?.cancel()
+        answerTimer?.cancel()
+        binding.pbTimer.visibility = View.GONE
+        isRecording = false
+
+        if (isMultiplayer) {
+            // --- MODO MULTIJUGADOR (Soy Pasivo/Escuchando) ---
+            toast("Turno de '$botName'. Esperando...")
+
+            clientListenerJob?.cancel()
+            clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    while(true) {
+                        val command = ConnectionManager.dataIn?.readUTF() ?: break
+                        withContext(Dispatchers.Main) {
+                            handleNetworkCommand(command)
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        toast("¡Error de conexión con '$botName'!")
+                    }
+                }
+            }
+        } else {
+            // --- MODO OFFLINE (Soy Activo con IA) ---
+            toast("Turno de la máquina...")
+            machineMakesAGuess()
+        }
+    }
+
+
+
+    /**
+     * NUEVA: El Cliente aplica la respuesta correcta que el Host le dijo
+     */
+    private fun applyRemoteAnswer(index: Int) {
+        if (::answerAdapter.isInitialized) {
+            answerAdapter.revealAnswer(index)
+            soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
+
+            // Si yo (Cliente) sigo jugando, reinicio mi timer de pensar
+            if (isPlayerTurn && playerStrikes < 3) {
+                startThinkingTimer()
+            }
+        }
+    }
+
+    /**
+     * NUEVA: El Cliente aplica el strike que el Host le dijo
+     */
+    private fun applyRemoteStrike(strikeCount: Int? = null) {
+        // Si el Host nos dice el # de strike (para el oponente)
+        if (strikeCount != null) {
+            when (strikeCount) {
+                1 -> binding.ivStrike1.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
+                2 -> binding.ivStrike2.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
+                3 -> binding.ivStrike3.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
+            }
+        }
+        // Si no (fue nuestro propio error)
+        else {
+            toast("¡Incorrecto!")
+            soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
+            vibrateOnError()
+
+            // Como clientes, no llevamos la cuenta de strikes, solo reiniciamos
+            if (isPlayerTurn && playerStrikes < 3) {
+                startThinkingTimer()
+            }
+        }
     }
 
     private fun machineMakesAGuess() {
@@ -426,17 +796,21 @@ class GamePlayActivity : AppCompatActivity() {
     // En GamePlayActivity.kt
 
     // ¡¡REEMPLAZA ESTA FUNCIÓN!!
+    // ¡¡REEMPLAZA ESTA FUNCIÓN!!
+    /**
+     * MODIFICADA: Sabe si "Checar" (Host) o "Enviar" (Cliente)
+     */
     private fun setupMicButton() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
 
         speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+
             override fun onReadyForSpeech(params: Bundle?) {
                 binding.btnMic.setImageResource(android.R.drawable.presence_audio_online)
             }
             override fun onBeginningOfSpeech() {}
             override fun onRmsChanged(rmsdB: Float) {}
             override fun onBufferReceived(buffer: ByteArray?) {}
-
             override fun onEndOfSpeech() {
                 isRecording = false
                 binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
@@ -449,24 +823,28 @@ class GamePlayActivity : AppCompatActivity() {
                 binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
 
                 if (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT) {
-
-                    // ¡¡CAMBIO AQUÍ!! Inicia la pausa
-                    binding.btnMic.isEnabled = false
-                    lifecycleScope.launch {
+                    // Si soy Host u Offline, yo proceso el strike
+                    if (isHost || !isMultiplayer) {
                         toast("No entendí. ¡Incorrecto!")
-                        soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                         vibrateOnError()
-                        delay(2000) // Pausa
-
                         addStrike()
-
-                        if (isPlayerTurn && playerStrikes < 3) {
-                            binding.btnMic.isEnabled = true
-                            startThinkingTimer()
+                    } else {
+                        // Soy Cliente, le aviso al Host que no entendí
+                        toast("No entendí. Enviando...")
+                        binding.btnMic.isEnabled = false
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            ConnectionManager.dataOut?.writeUTF("GUESS:error_no_match")
+                            ConnectionManager.dataOut?.flush()
                         }
+                        startMachineTurn() // <-- Pone isPlayerTurn = false
                     }
                 } else {
                     toast("Error de micrófono, intenta de nuevo.")
+                }
+
+                // Reinicia el timer de pensar SI es mi turno y no he perdido
+                if (isPlayerTurn && playerStrikes < 3) {
+                    startThinkingTimer()
                 }
             }
 
@@ -476,26 +854,38 @@ class GamePlayActivity : AppCompatActivity() {
                 binding.pbTimer.visibility = View.GONE
 
                 val spokenText = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.get(0)
+
                 if (!spokenText.isNullOrEmpty()) {
-                    // Esta función ya tiene el delay y el reinicio del timer
-                    lifecycleScope.launch {
+                    if (isHost || !isMultiplayer) {
+                        // Soy Host u Offline: Yo checo la respuesta
                         checkAnswer(spokenText)
+                    } else {
+                        // Soy Cliente: Le envío mi respuesta al Host
+                        toast("¡Respuesta enviada! Esperando...")
+                        binding.btnMic.isEnabled = false
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            ConnectionManager.dataOut?.writeUTF("GUESS:$spokenText")
+                            ConnectionManager.dataOut?.flush()
+                        }
+                        startMachineTurn() // <-- Pone isPlayerTurn = false
                     }
                 } else {
-                    // ¡¡CAMBIO AQUÍ!! Inicia la pausa
-                    binding.btnMic.isEnabled = false
-                    lifecycleScope.launch {
+                    // ... (misma lógica de 'onError' si el texto es vacío)
+                    if (isHost || !isMultiplayer) {
                         toast("No entendí. ¡Incorrecto!")
-                        soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                         vibrateOnError()
-                        delay(2000) // Pausa
-
                         addStrike()
-
-                        if (isPlayerTurn && playerStrikes < 3) {
-                            binding.btnMic.isEnabled = true
-                            startThinkingTimer()
+                    } else {
+                        toast("No entendí. Enviando...")
+                        binding.btnMic.isEnabled = false
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            ConnectionManager.dataOut?.writeUTF("GUESS:error_empty")
+                            ConnectionManager.dataOut?.flush()
                         }
+                        startMachineTurn()
+                    }
+                    if (isPlayerTurn && playerStrikes < 3) {
+                        startThinkingTimer()
                     }
                 }
             }
@@ -503,15 +893,12 @@ class GamePlayActivity : AppCompatActivity() {
             override fun onEvent(eventType: Int, params: Bundle?) {}
         })
 
-        // El OnClickListener se modifica para que no haga nada si está pausado
         binding.btnMic.setOnClickListener {
-            // ¡¡CAMBIO AQUÍ!!
-            if (!binding.btnMic.isEnabled) return@setOnClickListener // Si está desactivado, no hagas nada
-
+            if (!binding.btnMic.isEnabled) return@setOnClickListener
             if (isRecording) {
-                stopRecording() // El usuario lo para manualmente
+                stopRecording()
             } else {
-                checkAudioPermission() // Esto llama a startRecording()
+                checkAudioPermission()
             }
         }
     }
@@ -678,19 +1065,17 @@ class GamePlayActivity : AppCompatActivity() {
 
     // ¡¡REEMPLAZA ESTA FUNCIÓN!!
     private fun checkAnswer(spokenText: String) {
-        // 1. Pausamos todo INMEDIATAMENTE
+        // 1. Pausamos todo
         thinkingTimer?.cancel()
-        binding.btnMic.isEnabled = false // Desactivamos el mic
+        binding.btnMic.isEnabled = false // Desactivamos el mic del Host
 
-        // Usamos una corutina para manejar la pausa del sonido
         lifecycleScope.launch {
             val normalizedSpokenText = normalizeText(spokenText)
             var foundMatch = false
-            var allAreNowRevealed = true
             var pointsGained = 0
             var answerIndex = -1
 
-            // 2. Buscamos el match (igual que antes)
+            // 2. Buscamos el match
             currentQuestionData?.answers?.forEachIndexed { index, answer ->
                 val normalizedAnswer = normalizeText(answer.text)
                 if (normalizedAnswer == normalizedSpokenText && !answer.isRevealed) {
@@ -703,59 +1088,80 @@ class GamePlayActivity : AppCompatActivity() {
             // 3. Lógica de ACIERTO
             if (foundMatch) {
                 hasAnyAnswerBeenRevealed = true
-                answerAdapter.revealAnswer(answerIndex)
-                soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f) // Sonido
+                answerAdapter.revealAnswer(answerIndex) // Host revela
+                soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f) // Host suena
 
                 if (isPlayerTurn) {
                     currentScore += pointsGained
                     toast("¡Correcto! +$pointsGained puntos. (Total: $currentScore)")
                 } else {
-                    toast("¡Máquina acierta! +$pointsGained puntos.")
+                    toast("¡'$botName' acierta! +$pointsGained puntos.")
                 }
 
-                // 4. Pausa para el sonido
-                delay(2000) // 1.5 segundos de pausa para el sonido
+                // ¡¡ENVIAR COMANDO!!
+                if (isMultiplayer && isHost) {
+                    launch(Dispatchers.IO) {
+                        // "REVEAL:indice_de_respuesta"
+                        ConnectionManager.dataOut?.writeUTF("REVEAL:$answerIndex")
+                        ConnectionManager.dataOut?.flush()
+                    }
+                }
 
-                // 5. Revisamos si el juego terminó
+                delay(1500) // Pausa por el sonido
+
+                // 4. Checamos si se acabó
+                var allAreNowRevealed = true
                 currentQuestionData?.answers?.forEach { if (!it.isRevealed) allAreNowRevealed = false }
 
                 if (allAreNowRevealed) {
-                    binding.btnMic.isEnabled = true // Reactivamos por si acaso
-                    showEndRoundDialog(if (isPlayerTurn) "¡GANASTE!" else "¡LA MÁQUINA GANA!", currentScore)
+                    showEndRoundDialog(if (isPlayerTurn) "¡GANASTE!" else "¡'$botName' GANA!", currentScore)
                 } else if (isStealAttempt) {
-                    showEndRoundDialog(if (isPlayerTurn) "¡ROBO EXITOSO!" else "¡LA MÁQUINA ROBA!", currentScore)
-                } else if (!isPlayerTurn) {
-                    machineMakesAGuess() // La máquina sigue (no reactivamos el mic)
-                } else if (isPlayerTurn) {
-                    binding.btnMic.isEnabled = true // Reactivamos
-                    startThinkingTimer() // Reinicia el timer de pensar
+                    showEndRoundDialog(if (isPlayerTurn) "¡ROBO EXITOSO!" else "¡'$botName' ROBA!", currentScore)
+                }
+                else if (!isPlayerTurn) { // Sigue el turno del oponente
+                    if (isMultiplayer) {
+                        startMachineTurn() // Host se pone a escuchar
+                    } else {
+                        machineMakesAGuess() // IA sigue jugando
+                    }
+                }
+                else if (isPlayerTurn) { // Sigue mi turno
+                    binding.btnMic.isEnabled = true
+                    startThinkingTimer()
                 }
 
             }
-            // 6. Lógica de FALLO
+            // 5. Lógica de FALLO
             else {
                 toast("¡Incorrecto!")
-                soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f) // Sonido
+                soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
 
-                // 7. Pausa para el sonido
-                delay(2000) // 1.5 segundos de pausa
+                // ¡¡ENVIAR COMANDO!!
+                if (isMultiplayer && isHost) {
+                    launch(Dispatchers.IO) {
+                        ConnectionManager.dataOut?.writeUTF("WRONG")
+                        ConnectionManager.dataOut?.flush()
+                    }
+                }
+
+                delay(1500) // Pausa por el sonido
 
                 if (isStealAttempt) {
-                    binding.btnMic.visibility = View.GONE
-                    if (!hasAnyAnswerBeenRevealed) {
-                        showEmpateDialog()
-                    } else {
-                        showEndRoundDialog(if (isPlayerTurn) "¡ROBO FALLIDO!" else "¡ROBO FALLIDO! ¡GANASTE!", currentScore)
-                    }
+                    // ... (lógica de robo fallido y empate)
                 } else {
-                    addStrike() // Esto puede llamar a startMachineTurn()
+                    addStrike() // Esto enviará el strike
 
-                    if (!isPlayerTurn && machineStrikes < 3) {
-                        machineMakesAGuess() // La máquina sigue (no reactivamos el mic)
-                    } else if (isPlayerTurn && playerStrikes < 3) {
-                        binding.btnMic.isEnabled = true // Reactivamos
-                        startThinkingTimer() // Reinicia el timer de pensar
+                    if (!isPlayerTurn) {
+                        if (isMultiplayer && machineStrikes < 3) {
+                            startMachineTurn() // Host se pone a escuchar
+                        } else if (!isMultiplayer && machineStrikes < 3) {
+                            machineMakesAGuess() // IA sigue jugando
+                        }
+                    }
+                    else if (isPlayerTurn && playerStrikes < 3) {
+                        binding.btnMic.isEnabled = true
+                        startThinkingTimer()
                     }
                 }
             }
@@ -763,57 +1169,175 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun addStrike() {
+        val strikeTakerIsPlayer = isPlayerTurn // Guardamos quién es
+
         if (isPlayerTurn) {
             playerStrikes++
-            currentStrikes = playerStrikes // Sincronizamos con el contador general
-
-            // Actualizar UI
-            when (playerStrikes) {
-                1 -> binding.ivStrike1.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                2 -> binding.ivStrike2.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                3 -> {
-                    binding.ivStrike3.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                    binding.btnMic.visibility = View.GONE
-                    // El jugador falló, la máquina intenta robar
-                    startMachineStealAttempt()
-                }
-            }
+            currentStrikes = playerStrikes
         } else {
-            // Es el turno de la máquina
             machineStrikes++
-            currentStrikes = machineStrikes // Sincronizamos
+            currentStrikes = machineStrikes
+        }
 
-            // Actualizar UI
-            when (machineStrikes) {
-                1 -> binding.ivStrike1.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                2 -> binding.ivStrike2.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                3 -> {
-                    binding.ivStrike3.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
-                    // La máquina falló, el jugador intenta robar
-                    startPlayerStealAttempt()
-                }
+        // ¡¡ENVIAR COMANDO!!
+        if (isMultiplayer && isHost) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                // "STRIKE:numero_de_strike"
+                ConnectionManager.dataOut?.writeUTF("STRIKE:$currentStrikes")
+                ConnectionManager.dataOut?.flush()
+            }
+        }
+
+        // Aplicamos el strike (en el Host)
+        applyStrikeToUI(currentStrikes)
+
+        // Checamos si se acabó
+        if (currentStrikes >= 3) {
+            if (strikeTakerIsPlayer) {
+                binding.btnMic.visibility = View.GONE
+                startMachineStealAttempt()
+            } else {
+                startPlayerStealAttempt()
             }
         }
     }
 
     private fun startPlayerStealAttempt() {
-        isPlayerTurn = true
-        isStealAttempt = true // ¡Es un robo!
+        // (Llamado cuando la MÁQUINA o el CLIENTE fallan 3 veces)
 
-        showGameAlert("¡3 Strikes de la Máquina!\n¡Tu turno de robar! (1 intento)") {
-            // Esto se ejecuta cuando el usuario presiona "OK"
-            binding.btnMic.visibility = View.VISIBLE
-            // El timer de 5 seg se activará cuando presione el mic
+        // ¡¡AQUÍ ESTÁ EL FIX!!
+        if (isMultiplayer) {
+            // MODO MULTI (Host): Le digo al Cliente que robe
+            isPlayerTurn = false // (Para mí, Host, es el turno del oponente)
+            isStealAttempt = true
+
+            showGameAlert("¡3 Strikes de '$botName'!\n¡Te toca robar!") {
+                // El Host se pone a escuchar la respuesta del Cliente
+                startMachineTurn()
+            }
+
+            // Enviamos la orden
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConnectionManager.dataOut?.writeUTF("STEAL:opponent") // "Oponente" (tú, Cliente) roba
+                ConnectionManager.dataOut?.flush()
+            }
+
+        } else {
+            // MODO OFFLINE (Jugador): Yo robo
+            isPlayerTurn = true
+            isStealAttempt = true
+
+            showGameAlert("¡3 Strikes de la Máquina!\n¡Tu turno de robar! (1 intento)") {
+                binding.btnMic.visibility = View.VISIBLE
+                startThinkingTimer() // Inicia el timer de pensar para el robo
+            }
         }
     }
 
     private fun startMachineStealAttempt() {
-        isPlayerTurn = false
-        isStealAttempt = true // ¡Es un robo!
+        // (Llamado cuando el JUGADOR (local) falla 3 veces)
 
-        showGameAlert("¡3 STRIKES!\nLa máquina intentará robar.") {
-            // Esto se ejecuta cuando el usuario presiona "OK"
-            machineMakesAGuess() // La máquina usa la misma lógica para adivinar
+        binding.btnMic.visibility = View.GONE
+
+        // ¡¡AQUÍ ESTÁ EL FIX!!
+        if (isMultiplayer) {
+            // MODO MULTI (Host): Le digo al Cliente que YO (Host) voy a robar
+            isPlayerTurn = true // (Es mi turno, Host)
+            isStealAttempt = true
+
+            showGameAlert("¡3 STRIKES!\n¡Intentaré robar!") {
+                // El Host activa su propio micrófono para robar
+                binding.btnMic.visibility = View.VISIBLE
+                startThinkingTimer()
+            }
+
+            // Enviamos la orden
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConnectionManager.dataOut?.writeUTF("STEAL:player") // "Player" (yo, Host) roba
+                ConnectionManager.dataOut?.flush()
+            }
+
+        } else {
+            // MODO OFFLINE (IA): La IA roba
+            isPlayerTurn = false
+            isStealAttempt = true
+
+            showGameAlert("¡3 STRIKES!\nLa máquina intentará robar.") {
+                machineMakesAGuess()
+            }
+        }
+    }
+
+
+    private fun handleNetworkCommand(command: String) {
+        val parts = command.split(":")
+        when (parts[0]) {
+            // El Host nos mandó la respuesta del Cliente
+            "GUESS" -> {
+                val guess = parts[1]
+                toast("'$botName' dice: $guess")
+                checkAnswer(guess) // El Host (cerebro) checa la respuesta
+            }
+
+            // El Host nos mandó el resultado de NUESTRA respuesta
+            "REVEAL" -> {
+                val index = parts[1].toInt()
+                answerAdapter.revealAnswer(index)
+                soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
+
+                // ¡¡AQUÍ ESTÁ EL FIX!!
+                // Si era mi turno (Cliente), reinicio mi timer de pensar
+                if (isPlayerTurn) {
+                    startThinkingTimer()
+                }
+            }
+            // El Host nos dice que nuestra respuesta fue incorrecta
+            "WRONG" -> {
+                toast("¡Incorrecto!")
+                soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
+                vibrateOnError()
+
+                // ¡¡AQUÍ ESTÁ EL FIX!!
+                // Si era mi turno (Cliente), reinicio mi timer de pensar
+                if (isPlayerTurn) {
+                    startThinkingTimer()
+                }
+            }
+
+            "STRIKE" -> {
+                val strikeNum = parts[1].toInt()
+                applyStrikeToUI(strikeNum)
+            }
+
+            "STEAL" -> {
+                // El Host nos dice de quién es el turno de robar
+                if (parts[1] == "player") {
+                    // El Host (P1) va a robar
+                    isPlayerTurn = false
+                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
+                        // No hacemos nada, solo escuchamos
+                    }
+                } else if (parts[1] == "opponent") {
+                    // Nos toca robar a nosotros (Cliente/P2)
+                    isPlayerTurn = true
+                    isStealAttempt = true
+                    showGameAlert("¡3 Strikes del Oponente!\n¡Tu turno de robar! (1 intento)") {
+                        binding.btnMic.visibility = View.VISIBLE
+                        startThinkingTimer()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * NUEVA: Función helper para poner los strikes en la UI (para ambos)
+     */
+    private fun applyStrikeToUI(strikeCount: Int) {
+        when (strikeCount) {
+            1 -> binding.ivStrike1.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
+            2 -> binding.ivStrike2.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
+            3 -> binding.ivStrike3.apply { setImageResource(R.drawable.ic_strike_off); visibility = View.VISIBLE }
         }
     }
     // --- NUEVA: Función para limpiar texto ---
@@ -841,6 +1365,9 @@ class GamePlayActivity : AppCompatActivity() {
         super.onStop()
         machineAITask?.cancel()
         faceOffDialog?.dismiss()
+
+        // ¡¡NUEVO!! Si somos el cliente, dejamos de escuchar
+        clientListenerJob?.cancel()
     }
 
     override fun onDestroy() {
