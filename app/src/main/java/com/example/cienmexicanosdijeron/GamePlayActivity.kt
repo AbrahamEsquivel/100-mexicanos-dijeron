@@ -183,11 +183,7 @@ class GamePlayActivity : AppCompatActivity() {
                         showFaceOffDialog() // <-- Esto AHORA iniciará el listener del Host
                     }
 
-                    // ¡¡BORRAMOS ESTAS LÍNEAS DE AQUÍ!!
-                    // val clientCommand = ConnectionManager.dataIn?.readUTF()
-                    // if(clientCommand == "BUZZ" && !isFaceOffWon) {
-                    // ...
-                    // }
+                    // ¡¡BORRAMOS EL LISTENER DE "BUZZ" DE AQUÍ!!
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -216,10 +212,7 @@ class GamePlayActivity : AppCompatActivity() {
 
                 if (questionCommand != null && questionCommand.startsWith("QUESTION::SEP::")) {
 
-                    // ¡¡AQUÍ ESTÁ LA CORRECCIÓN!!
-                    // Debe decir 'questionCommand', no 'command'
                     val questionJson = questionCommand.substringAfter("QUESTION::SEP::")
-
                     currentQuestionData = parseQuestionDataFromJson(questionJson)
 
                     withContext(Dispatchers.Main) {
@@ -232,24 +225,9 @@ class GamePlayActivity : AppCompatActivity() {
                         }
                     }
 
-                    // 2. Ahora esta corutina SE QUEDA ESCUCHANDO el resultado
-                    val resultCommand = ConnectionManager.dataIn?.readUTF()
+                    // ¡¡BORRAMOS EL RESTO!!
+                    // La lógica de "YOU_WIN" / "YOU_LOSE" se va de aquí.
 
-                    if (resultCommand == "YOU_WIN") {
-                        // ¡Gané!
-                        withContext(Dispatchers.Main) {
-                            faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
-                            toast("¡Ganaste el turno!")
-                            startPlayerTurn()
-                        }
-                    } else if (resultCommand == "YOU_LOSE") {
-                        // Perdí
-                        withContext(Dispatchers.Main) {
-                            faceOffDialog?.dismiss() // ¡¡SE CIERRA!!
-                            toast("¡'$botName' ganó el turno!")
-                            startMachineTurn()
-                        }
-                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -598,33 +576,50 @@ class GamePlayActivity : AppCompatActivity() {
         tvTitle.text = title
         tvScore.text = "Puntaje: $score"
 
-        // 1. Calculamos quién ganó (esto ya lo tenías)
+        // 1. Calculamos quién ganó (para la BD)
         val winnerName = when {
             title.contains("GANASTE") || title.contains("ROBO EXITOSO") -> playerName
-            title.contains("MÁQUINA GANA") || title.contains("MÁQUINA ROBA") -> botName
-            else -> "Empate" // Para "ROBO FALLIDO", "EMPATE", etc.
+            title.contains("GANA") || title.contains("ROBA") -> botName // Ajustado para 'botName'
+            else -> "Empate"
         }
+        saveGameResult(winnerName, score) // Guardamos en la BD
 
-        // ¡¡¡AQUÍ ESTÁ LA LÍNEA QUE FALTABA!!!
-        // 2. Llamamos a la función para guardar en la BD
-        saveGameResult(winnerName, score)
-        // ¡¡¡FIN DE LA CORRECCIÓN!!!
+        // --- ¡¡AQUÍ ESTÁ EL FIX!! ---
+        // 2. Si soy el Host y estoy en Multi, le aviso al Cliente que el juego se acabó.
+        if (isMultiplayer && isHost) {
 
-        // Botón "Volver a Jugar" (te manda a la Ruleta)
+            // Creamos el título para el Cliente (al revés que el nuestro)
+            val remoteTitle = when {
+                title.contains("GANASTE") || title.contains("ROBO EXITOSO") -> "¡PERDISTE!"
+                title.contains("GANA") || title.contains("ROBA") -> "¡GANASTE!"
+                title.contains("EMPATE") -> "¡EMPATE!"
+                title.contains("ROBO FALLIDO! ¡GANASTE!") -> "¡ROBO FALLIDO! PERDISTE"
+                title.contains("¡ROBO FALLIDO!") -> "¡ROBO FALLIDO! ¡GANASTE!"
+                else -> "RONDA TERMINADA"
+            }
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                // Comando: "END_ROUND:Título_para_el_perdedor:Puntaje"
+                ConnectionManager.dataOut?.writeUTF("END_ROUND:$remoteTitle:$score")
+                ConnectionManager.dataOut?.flush()
+            }
+        }
+        // --- FIN DEL FIX ---
+
+        // 3. Botones (se quedan igual)
         btnPlayAgain.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this, SpinWheelActivity::class.java)
             startActivity(intent)
-            finish() // Cierra el juego actual
+            finish()
         }
 
-        // Botón "Menú Principal" (te manda al Menú)
         btnGoToMenu.setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Limpia las pantallas anteriores
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
-            finish() // Cierra el juego actual
+            finish()
         }
 
         dialog.show()
@@ -1272,53 +1267,36 @@ class GamePlayActivity : AppCompatActivity() {
     private fun handleNetworkCommand(command: String) {
         val parts = command.split(":")
         when (parts[0]) {
-            // El Host nos mandó la respuesta del Cliente
             "GUESS" -> {
                 val guess = parts[1]
                 toast("'$botName' dice: $guess")
                 checkAnswer(guess) // El Host (cerebro) checa la respuesta
             }
-
-            // El Host nos mandó el resultado de NUESTRA respuesta
             "REVEAL" -> {
                 val index = parts[1].toInt()
                 answerAdapter.revealAnswer(index)
                 soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
-
-                // ¡¡AQUÍ ESTÁ EL FIX!!
-                // Si era mi turno (Cliente), reinicio mi timer de pensar
                 if (isPlayerTurn) {
                     startThinkingTimer()
                 }
             }
-            // El Host nos dice que nuestra respuesta fue incorrecta
             "WRONG" -> {
                 toast("¡Incorrecto!")
                 soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
-
-                // ¡¡AQUÍ ESTÁ EL FIX!!
-                // Si era mi turno (Cliente), reinicio mi timer de pensar
                 if (isPlayerTurn) {
                     startThinkingTimer()
                 }
             }
-
             "STRIKE" -> {
                 val strikeNum = parts[1].toInt()
                 applyStrikeToUI(strikeNum)
             }
-
             "STEAL" -> {
-                // El Host nos dice de quién es el turno de robar
                 if (parts[1] == "player") {
-                    // El Host (P1) va a robar
                     isPlayerTurn = false
-                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
-                        // No hacemos nada, solo escuchamos
-                    }
+                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {}
                 } else if (parts[1] == "opponent") {
-                    // Nos toca robar a nosotros (Cliente/P2)
                     isPlayerTurn = true
                     isStealAttempt = true
                     showGameAlert("¡3 Strikes del Oponente!\n¡Tu turno de robar! (1 intento)") {
@@ -1327,6 +1305,18 @@ class GamePlayActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            "END_ROUND" -> {
+                val title = parts[1] // Este es el título de PERDEDOR
+                val score = parts[2].toInt()
+
+                // Paramos de escuchar
+                clientListenerJob?.cancel()
+
+                // Mostramos la alerta de fin de ronda (la misma que el Host)
+                showEndRoundDialog(title, score)
+            }
+            // --- FIN DEL FIX ---
         }
     }
 
