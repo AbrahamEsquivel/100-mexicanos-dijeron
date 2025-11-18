@@ -1198,65 +1198,68 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun startPlayerStealAttempt() {
-        // (Llamado cuando la MÁQUINA o el CLIENTE fallan 3 veces)
+        // (Llamado cuando el OPONENTE falló 3 veces)
 
-        // ¡¡AQUÍ ESTÁ EL FIX!!
         if (isMultiplayer) {
-            // MODO MULTI (Host): Le digo al Cliente que robe
-            isPlayerTurn = false // (Para mí, Host, es el turno del oponente)
+            // --- MODO MULTI (Host) ---
+            // Yo voy a robar. Activo mi micro.
+
+            isPlayerTurn = true // ¡Es mi turno!
             isStealAttempt = true
 
-            showGameAlert("¡3 Strikes de '$botName'!\n¡Te toca robar!") {
-                // El Host se pone a escuchar la respuesta del Cliente
-                startMachineTurn()
+            showGameAlert("¡3 Strikes de '$botName'!\n¡Tu turno de robar!") {
+                // Activo mi micrófono y timer
+                binding.btnMic.visibility = View.VISIBLE
+                startThinkingTimer()
             }
 
-            // Enviamos la orden
+            // Le aviso al Cliente que YO voy a robar
             lifecycleScope.launch(Dispatchers.IO) {
-                ConnectionManager.dataOut?.writeUTF("STEAL:opponent") // "Oponente" (tú, Cliente) roba
+                ConnectionManager.dataOut?.writeUTF("STEAL:player")
                 ConnectionManager.dataOut?.flush()
             }
 
         } else {
-            // MODO OFFLINE (Jugador): Yo robo
+            // --- MODO OFFLINE ---
             isPlayerTurn = true
             isStealAttempt = true
-
             showGameAlert("¡3 Strikes de la Máquina!\n¡Tu turno de robar! (1 intento)") {
                 binding.btnMic.visibility = View.VISIBLE
-                startThinkingTimer() // Inicia el timer de pensar para el robo
+                startThinkingTimer()
             }
         }
     }
 
     private fun startMachineStealAttempt() {
-        // (Llamado cuando el JUGADOR (local) falla 3 veces)
-
+        // (Llamado cuando YO, el jugador local/Host, fallé 3 veces)
         binding.btnMic.visibility = View.GONE
 
-        // ¡¡AQUÍ ESTÁ EL FIX!!
         if (isMultiplayer) {
-            // MODO MULTI (Host): Le digo al Cliente que YO (Host) voy a robar
-            isPlayerTurn = true // (Es mi turno, Host)
-            isStealAttempt = true
+            // --- MODO MULTI (Host) ---
+            // El Cliente va a robar. Yo me callo y escucho.
 
-            showGameAlert("¡3 STRIKES!\n¡Intentaré robar!") {
-                // El Host activa su propio micrófono para robar
-                binding.btnMic.visibility = View.VISIBLE
-                startThinkingTimer()
+            isPlayerTurn = false
+            // isStealAttempt = true // <-- Esto se borraba al llamar a startMachineTurn
+
+            showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
+                // Me pongo a escuchar al Cliente
+                startMachineTurn()
+
+                // ¡¡AQUÍ ESTÁ EL FIX!!
+                // Forzamos la bandera a TRUE *después* de que startMachineTurn la borrara
+                isStealAttempt = true
             }
 
-            // Enviamos la orden
+            // Le aviso al Cliente que ÉL debe robar
             lifecycleScope.launch(Dispatchers.IO) {
-                ConnectionManager.dataOut?.writeUTF("STEAL:player") // "Player" (yo, Host) roba
+                ConnectionManager.dataOut?.writeUTF("STEAL:opponent")
                 ConnectionManager.dataOut?.flush()
             }
 
         } else {
-            // MODO OFFLINE (IA): La IA roba
+            // --- MODO OFFLINE (IA) ---
             isPlayerTurn = false
             isStealAttempt = true
-
             showGameAlert("¡3 STRIKES!\nLa máquina intentará robar.") {
                 machineMakesAGuess()
             }

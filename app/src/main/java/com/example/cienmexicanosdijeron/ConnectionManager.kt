@@ -9,12 +9,9 @@ import java.net.Socket
  * para que no se pierda entre Actividades.
  */
 object ConnectionManager {
-
     private var socket: Socket? = null
     var dataIn: DataInputStream? = null
     var dataOut: DataOutputStream? = null
-
-    // Lo llama el HOST cuando el cliente se conecta
     fun setHostSocket(clientSocket: Socket) {
         socket = clientSocket
         try {
@@ -24,8 +21,6 @@ object ConnectionManager {
             e.printStackTrace()
         }
     }
-
-    // Lo llama el CLIENTE cuando se conecta al host
     fun setClientSocket(clientSocket: Socket) {
         socket = clientSocket
         try {
@@ -35,8 +30,6 @@ object ConnectionManager {
             e.printStackTrace()
         }
     }
-
-    // Cierra todo
     fun closeConnections() {
         try {
             dataIn?.close()
