@@ -766,16 +766,20 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun waitForHostVerification() {
-        // 1. Ocultamos controles visuales
-        binding.btnMic.visibility = View.GONE
+        // ¡CORRECCIÓN: NO OCULTAR EL BOTÓN!
+        // binding.btnMic.visibility = View.GONE  ← ELIMINAR ESTA LÍNEA
+
         binding.pbTimer.visibility = View.GONE
+        binding.btnMic.isEnabled = false // Deshabilitar temporalmente, pero mantener visible
+        binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
+        binding.btnMic.alpha = 0.5f // Visualmente deshabilitado
 
         // 2. Cancelamos timers locales
         thinkingTimer?.cancel()
         answerTimer?.cancel()
         isRecording = false
 
-        // 3. Nos ponemos a escuchar (igual que en startMachineTurn)
+        // 3. Nos ponemos a escuchar
         clientListenerJob?.cancel()
         clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -788,10 +792,20 @@ class GamePlayActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     toast("Error de conexión esperando verificación.")
+                    // En caso de error, restaurar el botón
+                    restoreMicButton()
                 }
             }
         }
+    }
 
+    private fun restoreMicButton() {
+        if (isPlayerTurn && playerStrikes < 3 && !isStealAttempt) {
+            binding.btnMic.visibility = View.VISIBLE
+            binding.btnMic.isEnabled = true
+            binding.btnMic.alpha = 1.0f
+            binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
+        }
     }
 
     // --- NUEVA: Lógica del Micrófono 1 (Pedir permiso) ---
@@ -865,7 +879,9 @@ class GamePlayActivity : AppCompatActivity() {
 
         binding.btnMic.isEnabled = true
         isRecording = false
+        binding.btnMic.alpha = 1.0f
         binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
+        isRecording = false
 
         // 3. Preparamos la barra
         binding.pbTimer.visibility = View.VISIBLE
@@ -945,10 +961,12 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(spokenText: String) {
+        // 1. Pausamos todo
         thinkingTimer?.cancel()
         binding.btnMic.isEnabled = false
 
         lifecycleScope.launch {
+            // Manejo de errores
             if (spokenText == "TIMEOUT" || spokenText == "error_no_match" || spokenText == "error_empty") {
                 handleWrongAnswer()
                 return@launch
@@ -959,6 +977,7 @@ class GamePlayActivity : AppCompatActivity() {
             var pointsGained = 0
             var answerIndex = -1
 
+            // 2. Buscamos el match
             currentQuestionData?.answers?.forEachIndexed { index, answer ->
                 val normalizedAnswer = normalizeText(answer.text)
                 if (normalizedAnswer == normalizedSpokenText && !answer.isRevealed) {
@@ -968,6 +987,7 @@ class GamePlayActivity : AppCompatActivity() {
                 }
             }
 
+            // --- ACIERTO ---
             if (foundMatch) {
                 hasAnyAnswerBeenRevealed = true
                 answerAdapter.revealAnswer(answerIndex)
@@ -975,34 +995,44 @@ class GamePlayActivity : AppCompatActivity() {
 
                 if (isPlayerTurn) {
                     currentScore += pointsGained
-                    toast("¡Correcto! +$pointsGained puntos.")
+                    toast("¡Correcto! +$pointsGained puntos. (Total: $currentScore)")
                 } else {
                     toast("¡'$botName' acierta! +$pointsGained puntos.")
                 }
 
+                // ¡¡AQUÍ ESTÁ LA CORRECCIÓN!!
+                // Enviamos "REVEAL" directo, no "RESULT:CORRECT"
                 if (isMultiplayer && isHost) {
                     launch(Dispatchers.IO) {
-                        ConnectionManager.dataOut?.writeUTF("RESULT:CORRECT:$answerIndex")
+                        ConnectionManager.dataOut?.writeUTF("REVEAL:$answerIndex")
                         ConnectionManager.dataOut?.flush()
                     }
                 }
-                delay(1500)
 
+                delay(1500) // Pausa
+
+                // Checamos si se acabó
                 var allAreNowRevealed = true
                 currentQuestionData?.answers?.forEach { if (!it.isRevealed) allAreNowRevealed = false }
 
                 if (allAreNowRevealed) {
                     showEndRoundDialog(if (isPlayerTurn) "¡GANASTE!" else "¡'$botName' GANA!", currentScore)
                 } else if (isStealAttempt) {
+                    // Robo exitoso
                     if (isPlayerTurn) showEndRoundDialog("¡ROBO EXITOSO! ¡GANASTE!", currentScore)
                     else showEndRoundDialog("¡TE ROBARON! PERDISTE", currentScore)
                 } else if (!isPlayerTurn) {
                     if (isMultiplayer) startMachineTurn() else machineMakesAGuess()
                 } else if (isPlayerTurn && !isStealAttempt) {
+                    // Reactivamos timer del Host
                     binding.btnMic.isEnabled = true
                     startThinkingTimer()
                 }
-            } else {
+
+            }
+            // --- FALLO ---
+            else {
+                // Llamamos a la función auxiliar de fallo que ya debería tener el fix también
                 handleWrongAnswer()
             }
         }
@@ -1135,9 +1165,10 @@ class GamePlayActivity : AppCompatActivity() {
                 answerAdapter.revealAnswer(index)
                 soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
 
-                // Si es mi turno (y no es robo), prendo el micro de nuevo
-                if (isPlayerTurn && !isStealAttempt) {
-                    startThinkingTimer() // <-- Esto hará visible el botón
+                if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
+                    // ¡LLAMAR EXPLÍCITAMENTE A RESTAURAR!
+                    restoreMicButton()
+                    startThinkingTimer()
                 }
             }
             "WRONG" -> {
@@ -1145,14 +1176,21 @@ class GamePlayActivity : AppCompatActivity() {
                 soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
 
-                // Si es mi turno (y no es robo), prendo el micro de nuevo
-                if (isPlayerTurn && !isStealAttempt) {
-                    startThinkingTimer() // <-- Esto hará visible el botón
+                if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
+                    // ¡LLAMAR EXPLÍCITAMENTE A RESTAURAR!
+                    restoreMicButton()
+                    startThinkingTimer()
                 }
             }
             "STRIKE" -> {
                 val strikeNum = parts[1].toInt()
                 applyStrikeToUI(strikeNum)
+
+                // También restaurar si es nuestro turno y tenemos menos de 3 strikes
+                if (isPlayerTurn && strikeNum < 3 && !isStealAttempt) {
+                    restoreMicButton()
+                    startThinkingTimer()
+                }
             }
             "STEAL" -> {
                 if (parts[1] == "player") {
