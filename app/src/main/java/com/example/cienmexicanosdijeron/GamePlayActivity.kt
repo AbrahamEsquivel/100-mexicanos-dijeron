@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.text.Normalizer
 import kotlin.random.Random
-
+import kotlinx.coroutines.isActive
 class GamePlayActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGamePlayBinding
@@ -420,14 +420,19 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun startPlayerTurn() {
+        // Limpiar antes de empezar nuevo turno
+        cleanupAllListeners()
+
         isPlayerTurn = true
         isStealAttempt = false
         playerStrikes = 0
         resetStrikeUI()
 
-        // Aseguramos que se vea
+        // Aseguramos que se vea y esté funcional
         binding.btnMic.visibility = View.VISIBLE
         binding.btnMic.isEnabled = true
+        binding.btnMic.alpha = 1.0f
+        binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
 
         toast("¡Tu turno! Piensa tu respuesta...")
         startThinkingTimer()
@@ -590,21 +595,37 @@ class GamePlayActivity : AppCompatActivity() {
 
         if (isMultiplayer) {
             toast("Turno de '$botName'. Esperando...")
+
+            // ¡CANCELAR cualquier listener anterior!
             clientListenerJob?.cancel()
+
             clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    while(true) {
+                    // Solo escuchar comandos específicos del turno de la máquina
+                    while(isActive && !isPlayerTurn) {
                         val command = ConnectionManager.dataIn?.readUTF() ?: break
-                        withContext(Dispatchers.Main) { handleNetworkCommand(command) }
+                        withContext(Dispatchers.Main) {
+                            handleNetworkCommand(command)
+                        }
                     }
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main) { toast("¡Error de conexión!") }
+                    withContext(Dispatchers.Main) {
+                        toast("¡Error de conexión!")
+                    }
                 }
             }
         } else {
             toast("Turno de la máquina...")
             machineMakesAGuess()
         }
+    }
+
+    private fun cleanupAllListeners() {
+        machineAITask?.cancel()
+        thinkingTimer?.cancel()
+        answerTimer?.cancel()
+        clientListenerJob?.cancel()
+        hostBuzzerListenerJob?.cancel()
     }
 
     private fun applyRemoteAnswer(index: Int) {
@@ -766,25 +787,23 @@ class GamePlayActivity : AppCompatActivity() {
     }
 
     private fun waitForHostVerification() {
-        // ¡CORRECCIÓN: NO OCULTAR EL BOTÓN!
-        // binding.btnMic.visibility = View.GONE  ← ELIMINAR ESTA LÍNEA
-
         binding.pbTimer.visibility = View.GONE
-        binding.btnMic.isEnabled = false // Deshabilitar temporalmente, pero mantener visible
+        binding.btnMic.isEnabled = false
         binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
-        binding.btnMic.alpha = 0.5f // Visualmente deshabilitado
+        binding.btnMic.alpha = 0.5f
 
-        // 2. Cancelamos timers locales
+        // ¡IMPORTANTE! Cancelar cualquier listener anterior
+        clientListenerJob?.cancel()
+
         thinkingTimer?.cancel()
         answerTimer?.cancel()
         isRecording = false
 
-        // 3. Nos ponemos a escuchar
-        clientListenerJob?.cancel()
         clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
             try {
-                while(true) {
-                    val command = ConnectionManager.dataIn?.readUTF() ?: break
+                // Solo esperar UNA respuesta del host, no un loop infinito
+                val command = ConnectionManager.dataIn?.readUTF()
+                if (command != null) {
                     withContext(Dispatchers.Main) {
                         handleNetworkCommand(command)
                     }
@@ -792,7 +811,6 @@ class GamePlayActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     toast("Error de conexión esperando verificación.")
-                    // En caso de error, restaurar el botón
                     restoreMicButton()
                 }
             }
@@ -1156,19 +1174,25 @@ class GamePlayActivity : AppCompatActivity() {
         val parts = command.split(":")
         when (parts[0]) {
             "GUESS" -> {
-                val guess = parts[1]
-                toast("'$botName' dice: $guess")
-                checkAnswer(guess)
+                // Solo procesar si es nuestro turno de máquina
+                if (!isPlayerTurn) {
+                    val guess = parts[1]
+                    toast("'$botName' dice: $guess")
+                    checkAnswer(guess)
+                }
             }
             "REVEAL" -> {
                 val index = parts[1].toInt()
                 answerAdapter.revealAnswer(index)
                 soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
 
+                // Reactivar solo si es nuestro turno y podemos seguir jugando
                 if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
-                    // ¡LLAMAR EXPLÍCITAMENTE A RESTAURAR!
-                    restoreMicButton()
-                    startThinkingTimer()
+                    lifecycleScope.launch {
+                        delay(1000) // Pequeña pausa para ver la respuesta
+                        restoreMicButton()
+                        startThinkingTimer()
+                    }
                 }
             }
             "WRONG" -> {
@@ -1176,31 +1200,38 @@ class GamePlayActivity : AppCompatActivity() {
                 soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
 
+                // Reactivar solo si es nuestro turno y podemos seguir jugando
                 if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
-                    // ¡LLAMAR EXPLÍCITAMENTE A RESTAURAR!
-                    restoreMicButton()
-                    startThinkingTimer()
+                    lifecycleScope.launch {
+                        delay(1000) // Pequeña pausa
+                        restoreMicButton()
+                        startThinkingTimer()
+                    }
                 }
             }
             "STRIKE" -> {
                 val strikeNum = parts[1].toInt()
                 applyStrikeToUI(strikeNum)
 
-                // También restaurar si es nuestro turno y tenemos menos de 3 strikes
                 if (isPlayerTurn && strikeNum < 3 && !isStealAttempt) {
-                    restoreMicButton()
-                    startThinkingTimer()
+                    lifecycleScope.launch {
+                        delay(1000)
+                        restoreMicButton()
+                        startThinkingTimer()
+                    }
                 }
             }
             "STEAL" -> {
                 if (parts[1] == "player") {
                     isPlayerTurn = false
-                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {}
+                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
+                        // Limpiar listener actual
+                        clientListenerJob?.cancel()
+                    }
                 } else if (parts[1] == "opponent") {
                     isPlayerTurn = true
                     isStealAttempt = true
                     showGameAlert("¡3 Strikes del Oponente!\n¡Tu turno de robar! (1 intento)") {
-                        // Aquí también aseguramos que se vea
                         binding.btnMic.visibility = View.VISIBLE
                         startThinkingTimer()
                     }
@@ -1209,7 +1240,8 @@ class GamePlayActivity : AppCompatActivity() {
             "END_ROUND" -> {
                 val title = parts[1]
                 val score = parts[2].toInt()
-                clientListenerJob?.cancel()
+                // Limpiar TODOS los listeners
+                cleanupAllListeners()
                 showEndRoundDialog(title, score)
             }
         }
@@ -1246,13 +1278,13 @@ class GamePlayActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        machineAITask?.cancel()
+        cleanupAllListeners()
         faceOffDialog?.dismiss()
-        clientListenerJob?.cancel()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        cleanupAllListeners()
         speechRecognizer?.destroy()
         soundPool?.release()
         soundPool = null
