@@ -1168,11 +1168,11 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun showEndRoundDialog(title: String, score: Int) {
-        // Inflamos TU diseño XML
+        // Inflamos el diseño XML
         val dialogView = layoutInflater.inflate(R.layout.dialog_end_round, null)
         val builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
-        builder.setCancelable(false) // No se puede cerrar tocando afuera
+        builder.setCancelable(false)
 
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -1186,20 +1186,44 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         tvScore.text = "Puntaje Final: $score"
 
         // Guardar resultado en BD (si aplica)
-        val winnerName = if (title.contains(playerName, ignoreCase = true) || title.contains("GANASTE")) playerName else botName
+        val winnerName = if (title.contains(playerName, ignoreCase = true) || title.contains("GANASTE") || title.contains("EXITOSO")) playerName else botName
         if (!title.contains("Empate")) {
             saveGameResult(winnerName, score)
         }
 
-        // Si soy HOST, envío el resultado al cliente para que vea la misma ventana
+        // --- CORRECCIÓN AQUÍ: ENVIAR EL MENSAJE OPUESTO AL CLIENTE ---
         if (isMultiplayer && isHost) {
+            // Calculamos qué debe ver el OTRO jugador (el Cliente)
+            val remoteTitle = when {
+                // 1. Si YO gané normal -> Él perdió
+                title.contains("GANASTE LA RONDA") -> "¡$botName GANA LA RONDA!"
+
+                // 2. Si el BOT (Cliente) ganó normal -> Él ganó
+                title.contains("$botName GANA") -> "¡GANASTE LA RONDA!"
+
+                // 3. Robo Exitoso MÍO -> A él le robaron
+                title.contains("ROBO EXITOSO DEL ANFITRIÓN") -> "¡EL ANFITRIÓN TE ROBÓ LA RONDA!\nTus puntos se van al otro equipo."
+
+                // 4. Robo Exitoso SUYO -> Él robó
+                title.contains("EL INVITADO TE ROBÓ") -> "¡ROBO EXITOSO DEL INVITADO!\nTe llevas todos los puntos."
+
+                // 5. Robo Fallido MÍO -> Él gana
+                title.contains("ROBO FALLIDO DEL ANFITRIÓN") -> "¡ROBO FALLIDO DEL ANFITRIÓN!\nEl INVITADO se queda con los puntos."
+
+                // 6. Robo Fallido SUYO -> Yo gano (Él pierde el robo)
+                title.contains("ROBO FALLIDO DEL INVITADO") -> "¡ROBO FALLIDO DEL INVITADO!\nEl ANFITRIÓN se queda con los puntos."
+
+                // Default (por si acaso)
+                else -> title
+            }
+
             lifecycleScope.launch(Dispatchers.IO) {
-                // Solo enviamos si acabamos de generar el diálogo, para evitar bucles
-                // (Opcional: puedes poner una bandera boolean dialogShown = true)
-                ConnectionManager.dataOut?.writeUTF("END_ROUND:$title:$score")
+                // Enviamos 'remoteTitle' en lugar de 'title'
+                ConnectionManager.dataOut?.writeUTF("END_ROUND:$remoteTitle:$score")
                 ConnectionManager.dataOut?.flush()
             }
         }
+        // ------------------------------------------------------------
 
         // --- BOTÓN: VOLVER A JUGAR ---
         btnPlayAgain.setOnClickListener {
@@ -1208,13 +1232,16 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
             // Si soy HOST, le ordeno al cliente que también se vaya a la ruleta
             if (isMultiplayer && isHost) {
                 lifecycleScope.launch(Dispatchers.IO) {
-                    ConnectionManager.dataOut?.writeUTF("RESET_GAME") // Comando nuevo
+                    ConnectionManager.dataOut?.writeUTF("RESET_GAME")
                     ConnectionManager.dataOut?.flush()
                 }
             }
 
             // Movernos a la Ruleta
             val intent = Intent(this, SpinWheelActivity::class.java)
+            intent.putExtra("IS_MULTIPLAYER", isMultiplayer)
+            intent.putExtra("IS_HOST", isHost)
+            intent.putExtra("OPPONENT_NAME", botName)
             startActivity(intent)
             finish()
         }
