@@ -238,21 +238,32 @@ class SpinWheelActivity : AppCompatActivity() {
         btnStartGame.setOnClickListener {
             dialog.dismiss()
 
-            val intent = Intent(this, GamePlayActivity::class.java)
+            // 🔥 Elegimos A QUÉ ACTIVITY IR según el modo
+            val targetClass = if (isMultiplayer) {
+                GamePlayMultiplayerActivity::class.java   // modo online
+            } else {
+                GamePlayOfflineActivity::class.java       // vs máquina
+            }
 
-            // ¡¡PASAMOS TODA LA INFO!!
+            val intent = Intent(this, targetClass)
+
+            // Siempre mandamos la categoría
             intent.putExtra("SELECTED_CATEGORY", category)
-            intent.putExtra("IS_MULTIPLAYER", isMultiplayer)
-            intent.putExtra("IS_HOST", isHost)
-            intent.putExtra("OPPONENT_NAME", opponentName)
+
+            // Solo si es multijugador mandamos estos extras
+            if (isMultiplayer) {
+                intent.putExtra("IS_HOST", isHost)
+                intent.putExtra("OPPONENT_NAME", opponentName)
+            }
 
             startActivity(intent)
             finish()
         }
 
-        dialog.setCancelable(false) // No dejamos que lo cierren
+        dialog.setCancelable(false)
         dialog.show()
     }
+
 
     // NUEVA
     private fun toast(msg: String) {
