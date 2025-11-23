@@ -1,276 +1,306 @@
 {
   "categorias": [
     {
-      "nombre": "Objetos",
-      "preguntas": [
-        {
-          "pregunta": "Objeto que usamos para protegernos de la lluvia",
-          "respuestas": [
-            { "texto": "Paraguas", "puntos": 50 },
-            { "texto": "Impermeable", "puntos": 30 },
-            { "texto": "Sombrilla", "puntos": 15 },
-            { "texto": "Gorro", "puntos": 8 },
-            { "texto": "Botas", "puntos": 5 }
-          ]
-        },
-        {
-          "pregunta": "Herramienta que sirve para martillar clavos",
-          "respuestas": [
-            { "texto": "Martillo", "puntos": 55 },
-            { "texto": "Mazo", "puntos": 25 },
-            { "texto": "Almádena", "puntos": 15 },
-            { "texto": "Destornillador", "puntos": 8 },
-            { "texto": "Alicate", "puntos": 5 }
-          ]
-        },
-        {
-          "pregunta": "Objeto que usamos para ver la hora",
-          "respuestas": [
-            { "texto": "Reloj", "puntos": 60 },
-            { "texto": "Teléfono", "puntos": 25 },
-            { "texto": "Cronómetro", "puntos": 15 },
-            { "texto": "Despertador", "puntos": 8 },
-            { "texto": "Smartwatch", "puntos": 5 }
-          ]
-        },
-        {
-          "pregunta": "Objeto que usamos para cortar papel",
-          "respuestas": [
-            { "texto": "Tijeras", "puntos": 55 },
-            { "texto": "Cutter", "puntos": 25 },
-            { "texto": "Navaja", "puntos": 15 },
-            { "texto": "Cúter", "puntos": 8 },
-            { "texto": "Estilete", "puntos": 5 }
-          ]
-        },
-        {
-          "pregunta": "Objeto que usamos para sentarnos",
-          "respuestas": [
-            { "texto": "Silla", "puntos": 60 },
-            { "texto": "Banco", "puntos": 25 },
-            { "texto": "Taburete", "puntos": 15 },
-            { "texto": "Butaca", "puntos": 8 },
-            { "texto": "Puf", "puntos": 5 }
-          ]
-        }
-      ]
-    },
-    {
       "nombre": "Comida",
       "preguntas": [
         {
-          "pregunta": "Fruta que por fuera es verde y por dentro roja",
+          "pregunta": "¿Cuál es el taco favorito de los mexicanos?",
           "respuestas": [
-            { "texto": "Sandía", "puntos": 45 },
-            { "texto": "Manzana Verde", "puntos": 20 },
-            { "texto": "Guayaba", "puntos": 15 },
-            { "texto": "Pera", "puntos": 10 },
-            { "texto": "Uva Verde", "puntos": 8 }
+            { "texto": "Pastor", "puntos": 45 },
+            { "texto": "Bistec", "puntos": 30 },
+            { "texto": "Suadero", "puntos": 10 },
+            { "texto": "Carnitas", "puntos": 10 },
+            { "texto": "Barbacoa", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Platillo mexicano que se come en la mañana",
+          "pregunta": "Sabor de agua fresca más popular en las taquerías",
           "respuestas": [
-            { "texto": "Chilaquiles", "puntos": 50 },
-            { "texto": "Huevos Rancheros", "puntos": 30 },
-            { "texto": "Molletes", "puntos": 15 },
-            { "texto": "Huevos Motuleños", "puntos": 10 },
-            { "texto": "Enchiladas", "puntos": 8 }
+            { "texto": "Horchata", "puntos": 40 },
+            { "texto": "Jamaica", "puntos": 35 },
+            { "texto": "Tamarindo", "puntos": 10 },
+            { "texto": "Limón", "puntos": 10 },
+            { "texto": "Sandía", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Fruta cítrica de color naranja",
+          "pregunta": "Pan dulce que no puede faltar en la cena",
           "respuestas": [
-            { "texto": "Naranja", "puntos": 55 },
-            { "texto": "Mandarina", "puntos": 25 },
-            { "texto": "Toronja", "puntos": 15 },
-            { "texto": "Lima", "puntos": 10 },
-            { "texto": "Limón", "puntos": 8 }
+            { "texto": "Concha", "puntos": 50 },
+            { "texto": "Oreja", "puntos": 20 },
+            { "texto": "Cuerno", "puntos": 15 },
+            { "texto": "Dona", "puntos": 10 },
+            { "texto": "Bolillo", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Tipo de carne que viene del cerdo",
+          "pregunta": "¿Qué le pones a un elote preparado o esquite?",
           "respuestas": [
-            { "texto": "Puerco", "puntos": 50 },
-            { "texto": "Jamón", "puntos": 25 },
-            { "texto": "Tocino", "puntos": 15 },
-            { "texto": "Chuleta", "puntos": 10 },
-            { "texto": "Salchicha", "puntos": 8 }
+            { "texto": "Mayonesa", "puntos": 35 },
+            { "texto": "Queso", "puntos": 30 },
+            { "texto": "Chile", "puntos": 20 },
+            { "texto": "Limón", "puntos": 10 },
+            { "texto": "Sal", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Verdura de color naranja que crece bajo tierra",
+          "pregunta": "Sabor de tamal que se acaba primero",
           "respuestas": [
-            { "texto": "Zanahoria", "puntos": 60 },
-            { "texto": "Camote", "puntos": 25 },
-            { "texto": "Calabaza", "puntos": 15 },
-            { "texto": "Papa", "puntos": 10 },
-            { "texto": "Rábano", "puntos": 8 }
-          ]
-        }
-      ]
-    },
-    {
-      "nombre": "Cultura Pop",
-      "preguntas": [
-        {
-          "pregunta": "Superhéroe que lleva una capa y tiene una 'S' en el pecho",
-          "respuestas": [
-            { "texto": "Superman", "puntos": 60 },
-            { "texto": "Supergirl", "puntos": 25 },
-            { "texto": "Shazam", "puntos": 15 },
-            { "texto": "Hombre de Acero", "puntos": 10 },
-            { "texto": "Kal-El", "puntos": 8 }
+            { "texto": "Rojo", "puntos": 40 },
+            { "texto": "Verde", "puntos": 25 },
+            { "texto": "Mole", "puntos": 20 },
+            { "texto": "Rojas", "puntos": 10 },
+            { "texto": "Oaxaqueño", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Cantante famosa conocida como 'La Reina del Pop'",
+          "pregunta": "Fruta que le pones chile y limón",
           "respuestas": [
-            { "texto": "Madonna", "puntos": 55 },
-            { "texto": "Britney Spears", "puntos": 25 },
-            { "texto": "Lady Gaga", "puntos": 15 },
-            { "texto": "Beyoncé", "puntos": 10 },
-            { "texto": "Taylor Swift", "puntos": 8 }
+            { "texto": "Mango", "puntos": 35 },
+            { "texto": "Jícama", "puntos": 25 },
+            { "texto": "Pepino", "puntos": 20 },
+            { "texto": "Sandía", "puntos": 10 },
+            { "texto": "Naranja", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "Película de superhéroes de Marvel",
+          "pregunta": "Lo mejor para curar una 'cruda' (resaca)",
           "respuestas": [
-            { "texto": "Avengers", "puntos": 50 },
-            { "texto": "Iron Man", "puntos": 25 },
-            { "texto": "Spider-Man", "puntos": 15 },
-            { "texto": "Black Panther", "puntos": 10 },
-            { "texto": "Thor", "puntos": 8 }
+            { "texto": "Chilaquiles", "puntos": 40 },
+            { "texto": "Birria", "puntos": 25 },
+            { "texto": "Cerveza", "puntos": 15 },
+            { "texto": "Mariscos", "puntos": 10 },
+            { "texto": "Menudo", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "Serie de televisión sobre un profesor de química",
+          "pregunta": "Dulce mexicano que pica",
           "respuestas": [
-            { "texto": "Breaking Bad", "puntos": 65 },
-            { "texto": "Better Call Saul", "puntos": 25 },
-            { "texto": "The Wire", "puntos": 15 },
-            { "texto": "Narcos", "puntos": 10 },
-            { "texto": "Ozark", "puntos": 8 }
+            { "texto": "Pulparindo", "puntos": 35 },
+            { "texto": "Pelón Pelo Rico", "puntos": 25 },
+            { "texto": "Lucas", "puntos": 20 },
+            { "texto": "Tamborines", "puntos": 15 },
+            { "texto": "Mazapán", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Grupo musical británico de los años 60",
+          "pregunta": "Parte del pollo que más se pelea en el caldo",
           "respuestas": [
-            { "texto": "The Beatles", "puntos": 70 },
-            { "texto": "Rolling Stones", "puntos": 25 },
-            { "texto": "Queen", "puntos": 15 },
-            { "texto": "Led Zeppelin", "puntos": 10 },
-            { "texto": "Pink Floyd", "puntos": 8 }
-          ]
-        }
-      ]
-    },
-    {
-      "nombre": "Geografía",
-      "preguntas": [
-        {
-          "pregunta": "País que tenga una pirámide famosa",
-          "respuestas": [
-            { "texto": "Egipto", "puntos": 60 },
-            { "texto": "México", "puntos": 30 },
-            { "texto": "Guatemala", "puntos": 15 },
-            { "texto": "Sudán", "puntos": 10 },
-            { "texto": "Perú", "puntos": 8 }
+            { "texto": "Pechuga", "puntos": 35 },
+            { "texto": "Pierna", "puntos": 30 },
+            { "texto": "Muslo", "puntos": 20 },
+            { "texto": "Alita", "puntos": 10 },
+            { "texto": "Huacal", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Océano más grande del mundo",
+          "pregunta": "Marca de refresco que no sea Coca-Cola",
           "respuestas": [
-            { "texto": "Océano Pacífico", "puntos": 65 },
-            { "texto": "Océano Atlántico", "puntos": 20 },
-            { "texto": "Océano Índico", "puntos": 15 },
-            { "texto": "Océano Ártico", "puntos": 10 },
-            { "texto": "Océano Antártico", "puntos": 8 }
+            { "texto": "Pepsi", "puntos": 40 },
+            { "texto": "Jarritos", "puntos": 25 },
+            { "texto": "Sprite", "puntos": 15 },
+            { "texto": "Fanta", "puntos": 10 },
+            { "texto": "Manzanita", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "País más grande del mundo por territorio",
+          "pregunta": "Ingrediente principal del guacamole aparte del aguacate",
           "respuestas": [
-            { "texto": "Rusia", "puntos": 70 },
-            { "texto": "Canadá", "puntos": 25 },
-            { "texto": "China", "puntos": 15 },
-            { "texto": "Estados Unidos", "puntos": 10 },
-            { "texto": "Brasil", "puntos": 8 }
+            { "texto": "Cebolla", "puntos": 30 },
+            { "texto": "Jitomate", "puntos": 25 },
+            { "texto": "Cilantro", "puntos": 20 },
+            { "texto": "Limón", "puntos": 15 },
+            { "texto": "Chile", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "Capital de Francia",
+          "pregunta": "¿Qué se come en el cine?",
           "respuestas": [
-            { "texto": "París", "puntos": 60 },
-            { "texto": "Lyon", "puntos": 25 },
-            { "texto": "Marsella", "puntos": 15 },
-            { "texto": "Burdeos", "puntos": 10 },
-            { "texto": "Niza", "puntos": 8 }
+            { "texto": "Palomitas", "puntos": 60 },
+            { "texto": "Nachos", "puntos": 20 },
+            { "texto": "Hot Dog", "puntos": 10 },
+            { "texto": "Refresco", "puntos": 5 },
+            { "texto": "Dulces", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Río más largo del mundo",
+          "pregunta": "Sabor de helado o nieve más común",
           "respuestas": [
-            { "texto": "Nilo", "puntos": 55 },
-            { "texto": "Amazonas", "puntos": 30 },
-            { "texto": "Misisipi", "puntos": 15 },
-            { "texto": "Yangtsé", "puntos": 10 },
-            { "texto": "Danubio", "puntos": 8 }
-          ]
-        }
-      ]
-    },
-    {
-      "nombre": "Ciencia",
-      "preguntas": [
-        {
-          "pregunta": "Planeta conocido como 'el planeta rojo'",
-          "respuestas": [
-            { "texto": "Marte", "puntos": 70 },
-            { "texto": "Júpiter", "puntos": 15 },
-            { "texto": "Saturno", "puntos": 10 },
-            { "texto": "Venus", "puntos": 8 },
-            { "texto": "Mercurio", "puntos": 5 }
+            { "texto": "Limón", "puntos": 35 },
+            { "texto": "Vainilla", "puntos": 25 },
+            { "texto": "Chocolate", "puntos": 20 },
+            { "texto": "Fresa", "puntos": 15 },
+            { "texto": "Napolitano", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Partícula más pequeña de un elemento químico",
+          "pregunta": "¿Qué le pones a una Michelada?",
           "respuestas": [
-            { "texto": "Átomo", "puntos": 60 },
-            { "texto": "Molécula", "puntos": 25 },
-            { "texto": "Electrón", "puntos": 15 },
-            { "texto": "Protón", "puntos": 10 },
-            { "texto": "Neutrón", "puntos": 8 }
+            { "texto": "Cerveza", "puntos": 30 },
+            { "texto": "Clamato", "puntos": 25 },
+            { "texto": "Chamoy", "puntos": 20 },
+            { "texto": "Limón", "puntos": 15 },
+            { "texto": "Sal", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "Gas que respiran los seres humanos",
+          "pregunta": "Platillo típico de las fiestas patrias (Septiembre)",
           "respuestas": [
-            { "texto": "Oxígeno", "puntos": 65 },
-            { "texto": "Nitrógeno", "puntos": 20 },
-            { "texto": "Dióxido de carbono", "puntos": 15 },
-            { "texto": "Hidrógeno", "puntos": 10 },
-            { "texto": "Helio", "puntos": 8 }
+            { "texto": "Pozole", "puntos": 50 },
+            { "texto": "Flautas", "puntos": 30 },
+            { "texto": "Tostadas", "puntos": 10 },
+            { "texto": "Pambazos", "puntos": 5 },
+            { "texto": "Tamales", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Órgano del cuerpo humano que bombea sangre",
+          "pregunta": "Comida rápida extranjera favorita de los mexicanos",
           "respuestas": [
-            { "texto": "Corazón", "puntos": 70 },
-            { "texto": "Pulmón", "puntos": 20 },
-            { "texto": "Hígado", "puntos": 15 },
-            { "texto": "Riñón", "puntos": 10 },
-            { "texto": "Estómago", "puntos": 8 }
+            { "texto": "Pizza", "puntos": 45 },
+            { "texto": "Hamburguesas", "puntos": 35 },
+            { "texto": "Sushi", "puntos": 10 },
+            { "texto": "Hot Dogs", "puntos": 5 },
+            { "texto": "Pollo Frito", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Fuerza que nos mantiene pegados a la Tierra",
+          "pregunta": "¿Con qué acompañas un café en la mañana?",
           "respuestas": [
-            { "texto": "Gravedad", "puntos": 75 },
-            { "texto": "Magnetismo", "puntos": 20 },
-            { "texto": "Fricción", "puntos": 15 },
-            { "texto": "Inercia", "puntos": 10 },
-            { "texto": "Presión", "puntos": 8 }
+            { "texto": "Pan dulce", "puntos": 55 },
+            { "texto": "Galletas", "puntos": 20 },
+            { "texto": "Leche", "puntos": 10 },
+            { "texto": "Cigarro", "puntos": 10 },
+            { "texto": "Tamal", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Dulce típico que encuentras en un mercado",
+          "respuestas": [
+            { "texto": "Cocadas", "puntos": 30 },
+            { "texto": "Obleas", "puntos": 25 },
+            { "texto": "Rollo de guayaba", "puntos": 20 },
+            { "texto": "Palanquetas", "puntos": 15 },
+            { "texto": "Borrachitos", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "¿De qué color puede ser el mole?",
+          "respuestas": [
+            { "texto": "Rojo", "puntos": 50 },
+            { "texto": "Negro", "puntos": 30 },
+            { "texto": "Verde", "puntos": 15 },
+            { "texto": "Amarillo", "puntos": 3 },
+            { "texto": "Rosa", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Marca de botana (frituras) más famosa",
+          "respuestas": [
+            { "texto": "Sabritas", "puntos": 55 },
+            { "texto": "Barcel", "puntos": 30 },
+            { "texto": "Totis", "puntos": 10 },
+            { "texto": "Bokados", "puntos": 3 },
+            { "texto": "Encanto", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Comida que se acostumbra dar en las bodas o XV años",
+          "respuestas": [
+            { "texto": "Mole con arroz", "puntos": 40 },
+            { "texto": "Carnitas", "puntos": 25 },
+            { "texto": "Pastel", "puntos": 15 },
+            { "texto": "Crema de elote", "puntos": 10 },
+            { "texto": "Pierna", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Fruta que se usa para el ponche navideño",
+          "respuestas": [
+            { "texto": "Caña", "puntos": 35 },
+            { "texto": "Tejocote", "puntos": 30 },
+            { "texto": "Guayaba", "puntos": 20 },
+            { "texto": "Manzana", "puntos": 10 },
+            { "texto": "Ciruela pasa", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Tipo de salsa que pica mucho",
+          "respuestas": [
+            { "texto": "Habanero", "puntos": 50 },
+            { "texto": "Valentina", "puntos": 20 },
+            { "texto": "Verde", "puntos": 15 },
+            { "texto": "De árbol", "puntos": 10 },
+            { "texto": "Macha", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Algo que le echas a la sopa Maruchan",
+          "respuestas": [
+            { "texto": "Limón", "puntos": 45 },
+            { "texto": "Salsa Valentina", "puntos": 35 },
+            { "texto": "Sal", "puntos": 10 },
+            { "texto": "Maggi", "puntos": 5 },
+            { "texto": "Cueritos", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Guisado popular para una gordita",
+          "respuestas": [
+            { "texto": "Chicharrón", "puntos": 60 },
+            { "texto": "Requesón", "puntos": 15 },
+            { "texto": "Frijol", "puntos": 10 },
+            { "texto": "Picadillo", "puntos": 10 },
+            { "texto": "Rajas", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Forma de pasta para la sopa aguada",
+          "respuestas": [
+            { "texto": "Fideo", "puntos": 50 },
+            { "texto": "Letras", "puntos": 20 },
+            { "texto": "Munición", "puntos": 15 },
+            { "texto": "Codito", "puntos": 10 },
+            { "texto": "Estrellitas", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Bebida caliente tradicional además del café",
+          "respuestas": [
+            { "texto": "Atole", "puntos": 45 },
+            { "texto": "Chocolate", "puntos": 35 },
+            { "texto": "Té", "puntos": 10 },
+            { "texto": "Champurrado", "puntos": 5 },
+            { "texto": "Ponche", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lo más rico de un pambazo es...",
+          "respuestas": [
+            { "texto": "El pan enchilado", "puntos": 40 },
+            { "texto": "La papa con chorizo", "puntos": 35 },
+            { "texto": "La salsa", "puntos": 10 },
+            { "texto": "La crema", "puntos": 10 },
+            { "texto": "La lechuga", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Marca de cerveza mexicana más famosa en el mundo",
+          "respuestas": [
+            { "texto": "Corona", "puntos": 65 },
+            { "texto": "Modelo", "puntos": 15 },
+            { "texto": "Tecate", "puntos": 10 },
+            { "texto": "Victoria", "puntos": 5 },
+            { "texto": "XX Lager", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Comida que se le da a los niños en las fiestas infantiles",
+          "respuestas": [
+            { "texto": "Pizza", "puntos": 30 },
+            { "texto": "Sandwich", "puntos": 25 },
+            { "texto": "Hot dogs", "puntos": 20 },
+            { "texto": "Nuggets", "puntos": 15 },
+            { "texto": "Salchipulpos", "puntos": 10 }
           ]
         }
       ]
@@ -279,53 +309,303 @@
       "nombre": "Arte",
       "preguntas": [
         {
-          "pregunta": "Pintor que se cortó una oreja",
+          "pregunta": "Cantante mujer mexicana más famosa de pop",
           "respuestas": [
-            { "texto": "Vincent van Gogh", "puntos": 65 },
-            { "texto": "Pablo Picasso", "puntos": 20 },
-            { "texto": "Salvador Dalí", "puntos": 15 },
-            { "texto": "Claude Monet", "puntos": 10 },
-            { "texto": "Edvard Munch", "puntos": 8 }
+            { "texto": "Thalía", "puntos": 35 },
+            { "texto": "Paulina Rubio", "puntos": 25 },
+            { "texto": "Gloria Trevi", "puntos": 20 },
+            { "texto": "Belinda", "puntos": 15 },
+            { "texto": "Angela Aguilar", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Instrumento musical con teclas blancas y negras",
+          "pregunta": "Grupo de Rock mexicano que todos conocen",
           "respuestas": [
-            { "texto": "Piano", "puntos": 55 },
-            { "texto": "Órgano", "puntos": 25 },
-            { "texto": "Sintetizador", "puntos": 15 },
-            { "texto": "Acordeón", "puntos": 10 },
-            { "texto": "Clavecín", "puntos": 8 }
+            { "texto": "Maná", "puntos": 40 },
+            { "texto": "Caifanes", "puntos": 25 },
+            { "texto": "Café Tacvba", "puntos": 15 },
+            { "texto": "Molotov", "puntos": 10 },
+            { "texto": "El Tri", "puntos": 10 }
           ]
         },
         {
-          "pregunta": "Pintura famosa de Leonardo da Vinci",
+          "pregunta": "Villana de telenovela más recordada",
           "respuestas": [
-            { "texto": "Mona Lisa", "puntos": 70 },
-            { "texto": "La Última Cena", "puntos": 25 },
-            { "texto": "Hombre de Vitruvio", "puntos": 15 },
-            { "texto": "La Gioconda", "puntos": 10 },
-            { "texto": "Virgen de las Rocas", "puntos": 8 }
+            { "texto": "Doña Refugio", "puntos": 45 },
+            { "texto": "Catalina Creel", "puntos": 30 },
+            { "texto": "Rubí", "puntos": 15 },
+            { "texto": "Teresa", "puntos": 5 },
+            { "texto": "Paola Bracho", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Escultor de 'El David'",
+          "pregunta": "Programa de chismes de la televisión mexicana",
           "respuestas": [
-            { "texto": "Miguel Ángel", "puntos": 60 },
-            { "texto": "Donatello", "puntos": 25 },
-            { "texto": "Bernini", "puntos": 15 },
-            { "texto": "Rodin", "puntos": 10 },
-            { "texto": "Canova", "puntos": 8 }
+            { "texto": "Ventaneando", "puntos": 60 },
+            { "texto": "La Oreja", "puntos": 15 },
+            { "texto": "Hoy", "puntos": 10 },
+            { "texto": "Suelta la Sopa", "puntos": 10 },
+            { "texto": "De Primera Mano", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Instrumento de cuerda con arco",
+          "pregunta": "Comediante mexicano muy famoso",
           "respuestas": [
-            { "texto": "Violín", "puntos": 55 },
-            { "texto": "Viola", "puntos": 25 },
-            { "texto": "Chelo", "puntos": 15 },
-            { "texto": "Contrabajo", "puntos": 10 },
-            { "texto": "Violín eléctrico", "puntos": 8 }
+            { "texto": "Franco Escamilla", "puntos": 50 },
+            { "texto": "Eugenio Derbez", "puntos": 25 },
+            { "texto": "Capi Pérez", "puntos": 10 },
+            { "texto": "Polo Polo", "puntos": 10 },
+            { "texto": "Teo González", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Canción que no puede faltar en una boda para bailar",
+          "respuestas": [
+            { "texto": "Payaso de Rodeo", "puntos": 55 },
+            { "texto": "La Chona", "puntos": 20 },
+            { "texto": "El Venado", "puntos": 10 },
+            { "texto": "Víbora de la mar", "puntos": 10 },
+            { "texto": "Mesa que más aplauda", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Actriz mexicana que triunfó en Hollywood",
+          "respuestas": [
+            { "texto": "Salma Hayek", "puntos": 55 },
+            { "texto": "Eiza González", "puntos": 25 },
+            { "texto": "Yalitza Aparicio", "puntos": 10 },
+            { "texto": "Adriana Barraza", "puntos": 5 },
+            { "texto": "Karla Souza", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Influencer o Youtuber mexicano muy polémico",
+          "respuestas": [
+            { "texto": "Yeri Mua", "puntos": 35 },
+            { "texto": "Kunno", "puntos": 25 },
+            { "texto": "Karely Ruiz", "puntos": 20 },
+            { "texto": "Juan de Dios Pantoja", "puntos": 10 },
+            { "texto": "Alfredo Adame", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Personaje de Eugenio Derbez",
+          "respuestas": [
+            { "texto": "Ludovico Peluche", "puntos": 50 },
+            { "texto": "El Monje Loco", "puntos": 20 },
+            { "texto": "Armando Hoyos", "puntos": 15 },
+            { "texto": "El Diablito", "puntos": 10 },
+            { "texto": "Burro de Shrek", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Mejores bandas mexicanas que su nombre empieza con 'Los'",
+          "respuestas": [
+            { "texto": "Los Bukis", "puntos": 40 },
+            { "texto": "Los Tigres del Norte", "puntos": 30 },
+            { "texto": "Los Temerarios", "puntos": 15 },
+            { "texto": "Los Humildes ", "puntos": 10 },
+            { "texto": "Los Terricolas", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Mexicano ganador del Oscar (Los tres amigos)",
+          "respuestas": [
+            { "texto": "Guillermo del Toro", "puntos": 50 },
+            { "texto": "Eugenio Derbez", "puntos": 30 },
+            { "texto": "Omar Chaparro", "puntos": 15 },
+            { "texto": "Pedro Infante", "puntos": 5 },
+            { "texto": "Ninguno", "puntos": 0 }
+          ]
+        },
+        {
+          "pregunta": "Conductora de televisión matutina",
+          "respuestas": [
+            { "texto": "Galilea Montijo", "puntos": 40 },
+            { "texto": "Andrea Legarreta", "puntos": 35 },
+            { "texto": "Tania Rincón", "puntos": 10 },
+            { "texto": "Cynthia Rodríguez", "puntos": 10 },
+            { "texto": "Laura G", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Reality Show famoso en México",
+          "respuestas": [
+            { "texto": "La Casa de los Famosos", "puntos": 45 },
+            { "texto": "La Academia", "puntos": 30 },
+            { "texto": "Exatlón", "puntos": 15 },
+            { "texto": "MasterChef", "puntos": 5 },
+            { "texto": "Big Brother", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Canción clásica de Juan Gabriel",
+          "respuestas": [
+            { "texto": "Amor Eterno", "puntos": 40 },
+            { "texto": "El Noa Noa", "puntos": 25 },
+            { "texto": "Querida", "puntos": 20 },
+            { "texto": "Hasta que te conocí", "puntos": 10 },
+            { "texto": "Así fue", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Payaso famoso de la televisión mexicana",
+          "respuestas": [
+            { "texto": "Cepillín", "puntos": 60 },
+            { "texto": "Chabelo", "puntos": 15 },
+            { "texto": "Platanito", "puntos": 10 },
+            { "texto": "Lagrimita", "puntos": 10 },
+            { "texto": "Brozo", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Galán de telenovela de los 2000",
+          "respuestas": [
+            { "texto": "Fernando Colunga", "puntos": 50 },
+            { "texto": "Jaime Camil", "puntos": 20 },
+            { "texto": "William Levy", "puntos": 15 },
+            { "texto": "Sebastián Rulli", "puntos": 10 },
+            { "texto": "Gabriel Soto", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Película mexicana reciente muy taquillera",
+          "respuestas": [
+            { "texto": "No se aceptan devoluciones", "puntos": 40 },
+            { "texto": "Nosotros los Nobles", "puntos": 30 },
+            { "texto": "Roma", "puntos": 15 },
+            { "texto": "Cindy la Regia", "puntos": 10 },
+            { "texto": "El Infierno", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Integrante de 'La Casa de los Famosos' (Team Infierno)",
+          "respuestas": [
+            { "texto": "Wendy Guevara", "puntos": 60 },
+            { "texto": "Nicola", "puntos": 15 },
+            { "texto": "Poncho de Nigris", "puntos": 10 },
+            { "texto": "Sergio Mayer", "puntos": 10 },
+            { "texto": "Emilio Osorio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Apodo de un cantante famoso",
+          "respuestas": [
+            { "texto": "El Sol", "puntos": 45 },
+            { "texto": "El Potrillo", "puntos": 25 },
+            { "texto": "El Buki", "puntos": 15 },
+            { "texto": "El Principe de la cancion", "puntos": 10 },
+            { "texto": "El rey", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Muralista mexicano histórico",
+          "respuestas": [
+            { "texto": "Diego Rivera", "puntos": 55 },
+            { "texto": "David Alfaro Siqueiros", "puntos": 25 },
+            { "texto": "José Clemente Orozco", "puntos": 15 },
+            { "texto": "Rufino Tamayo", "puntos": 3 },
+            { "texto": "Frida Kahlo", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Canción que cantas en el Karaoke cuando estás dolido",
+          "respuestas": [
+            { "texto": "La Gata Bajo la Lluvia", "puntos": 35 },
+            { "texto": "Culpable o no", "puntos": 25 },
+            { "texto": "Rata de dos patas", "puntos": 20 },
+            { "texto": "Por tu maldito amor", "puntos": 10 },
+            { "texto": "El Rey", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Serie original de Netflix hecha en México",
+          "respuestas": [
+            { "texto": "Club de Cuervos", "puntos": 40 },
+            { "texto": "La Casa de las Flores", "puntos": 30 },
+            { "texto": "Luis Miguel", "puntos": 15 },
+            { "texto": "Control Z", "puntos": 10 },
+            { "texto": "Madre de alquiler", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Cantante de regional mexicano actual",
+          "respuestas": [
+            { "texto": "Christian Nodal", "puntos": 35 },
+            { "texto": "Peso Pluma", "puntos": 30 },
+            { "texto": "Julión Álvarez", "puntos": 20 },
+            { "texto": "Ángela Aguilar", "puntos": 10 },
+            { "texto": "Eduin Caz", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto característico del 'Chapulín Colorado'",
+          "respuestas": [
+            { "texto": "Chipote Chillón", "puntos": 45 },
+            { "texto": "Antenitas", "puntos": 30 },
+            { "texto": "Pastillas de Chiquitolina", "puntos": 10 },
+            { "texto": "Corazón (Escudo)", "puntos": 10 },
+            { "texto": "Chicharra paralizadora", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Plataforma de streaming (video) más usada en México",
+          "respuestas": [
+            { "texto": "Netflix", "puntos": 50 },
+            { "texto": "YouTube", "puntos": 25 },
+            { "texto": "Disney+", "puntos": 10 },
+            { "texto": "HBO Max", "puntos": 10 },
+            { "texto": "Prime Video", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Personaje principal de la 'Familia P. Luche' (aparte de Ludovico)",
+          "respuestas": [
+            { "texto": "Federica", "puntos": 40 },
+            { "texto": "Junior", "puntos": 25 },
+            { "texto": "Ludoviquito", "puntos": 15 },
+            { "texto": "Bibi", "puntos": 10 },
+            { "texto": "Exelsa", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Elemento que no puede faltar en el altar de la película 'Coco'",
+          "respuestas": [
+            { "texto": "Foto", "puntos": 40 },
+            { "texto": "Flor de Cempasúchil", "puntos": 30 },
+            { "texto": "Pan de Muerto", "puntos": 15 },
+            { "texto": "Velas", "puntos": 10 },
+            { "texto": "Guitarra", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Nombre de una de las novelas de las 'Marías' de Thalía",
+          "respuestas": [
+            { "texto": "María la del Barrio", "puntos": 40 },
+            { "texto": "Marimar", "puntos": 30 },
+            { "texto": "María Mercedes", "puntos": 20 },
+            { "texto": "Rosalinda", "puntos": 5 },
+            { "texto": "Quinceañera", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Red Social que más usan los jóvenes mexicanos hoy",
+          "respuestas": [
+            { "texto": "TikTok", "puntos": 45 },
+            { "texto": "Instagram", "puntos": 30 },
+            { "texto": "Facebook", "puntos": 15 },
+            { "texto": "WhatsApp", "puntos": 5 },
+            { "texto": "Twitter", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Instrumento musical que toca un Mariachi",
+          "respuestas": [
+            { "texto": "Trompeta", "puntos": 35 },
+            { "texto": "Guitarra", "puntos": 25 },
+            { "texto": "Violín", "puntos": 25 },
+            { "texto": "Guitarrón", "puntos": 10 },
+            { "texto": "Vihuela", "puntos": 5 }
           ]
         }
       ]
@@ -334,53 +614,1213 @@
       "nombre": "Deportes",
       "preguntas": [
         {
-          "pregunta": "Menciona un deporte que use una pelota",
+          "pregunta": "Equipo de fútbol mexicano mas odiado",
           "respuestas": [
-            { "texto": "Fútbol", "puntos": 52 },
-            { "texto": "Básquetbol", "puntos": 28 },
-            { "texto": "Béisbol", "puntos": 15 },
-            { "texto": "Tenis", "puntos": 10 },
-            { "texto": "Voleibol", "puntos": 8 }
+            { "texto": "América", "puntos": 45 },
+            { "texto": "Chivas", "puntos": 40 },
+            { "texto": "Cruz Azul", "puntos": 10 },
+            { "texto": "Pumas", "puntos": 4 },
+            { "texto": "Atlas", "puntos": 1 }
           ]
         },
         {
-          "pregunta": "Deporte que se juega sobre hielo con patines",
+          "pregunta": "Apodo del boxeador Saúl Álvarez",
           "respuestas": [
-            { "texto": "Hockey sobre hielo", "puntos": 50 },
-            { "texto": "Patinaje artístico", "puntos": 30 },
-            { "texto": "Curling", "puntos": 15 },
-            { "texto": "Patinaje de velocidad", "puntos": 10 },
-            { "texto": "Bobsleigh", "puntos": 8 }
+            { "texto": "El Canelo", "puntos": 80 },
+            { "texto": "El Pecas", "puntos": 10 },
+            { "texto": "Canelito", "puntos": 5 },
+            { "texto": "El Rojo", "puntos": 3 },
+            { "texto": "El Campeón", "puntos": 2 }
           ]
         },
         {
-          "pregunta": "Deporte de raqueta que se juega individual",
+          "pregunta": "El luchador más famoso de la historia de México",
           "respuestas": [
-            { "texto": "Tenis", "puntos": 55 },
-            { "texto": "Bádminton", "puntos": 25 },
-            { "texto": "Squash", "puntos": 15 },
-            { "texto": "Frontón", "puntos": 10 },
-            { "texto": "Pádel", "puntos": 8 }
+            { "texto": "El Santo", "puntos": 60 },
+            { "texto": "Blue Demon", "puntos": 20 },
+            { "texto": "Místico", "puntos": 10 },
+            { "texto": "El Perro Aguayo", "puntos": 5 },
+            { "texto": "La Parka", "puntos": 5 }
           ]
         },
         {
-          "pregunta": "Deporte acuático con tabla",
+          "pregunta": "Piloto mexicano de Fórmula 1 actual",
           "respuestas": [
-            { "texto": "Surf", "puntos": 60 },
-            { "texto": "Windsurf", "puntos": 25 },
-            { "texto": "Kitesurf", "puntos": 15 },
-            { "texto": "Bodyboard", "puntos": 10 },
-            { "texto": "Paddle surf", "puntos": 8 }
+            { "texto": "Checo Pérez", "puntos": 85 },
+            { "texto": "Pato O Ward", "puntos": 5 },
+            { "texto": "Esteban Gutiérrez", "puntos": 5 },
+            { "texto": "Pedro Rodríguez", "puntos": 3 },
+            { "texto": "Ricardo Rodríguez", "puntos": 2 }
           ]
         },
         {
-          "pregunta": "Deporte de combate con guantes",
+          "pregunta": "Equipo del Norte de México muy popular",
           "respuestas": [
-            { "texto": "Boxeo", "puntos": 65 },
-            { "texto": "MMA", "puntos": 25 },
-            { "texto": "Kickboxing", "puntos": 15 },
-            { "texto": "Muay Thai", "puntos": 10 },
-            { "texto": "Karate", "puntos": 8 }
+            { "texto": "Tigres", "puntos": 45 },
+            { "texto": "Monterrey", "puntos": 40 },
+            { "texto": "Santos Laguna", "puntos": 10 },
+            { "texto": "Xolos", "puntos": 3 },
+            { "texto": "Juárez", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Jugador mexicano histórico que jugó en el Real Madrid",
+          "respuestas": [
+            { "texto": "Hugo Sánchez", "puntos": 55 },
+            { "texto": "Chicharito", "puntos": 35 },
+            { "texto": "Rafa Márquez", "puntos": 5 },
+            { "texto": "Tecatito", "puntos": 3 },
+            { "texto": "Guardado", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Estadio de fútbol más grande de México",
+          "respuestas": [
+            { "texto": "Estadio Azteca", "puntos": 80 },
+            { "texto": "Estadio Akron", "puntos": 10 },
+            { "texto": "Estadio BBVA", "puntos": 5 },
+            { "texto": "Estadio Olímpico", "puntos": 3 },
+            { "texto": "Estadio Jalisco", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Objeto necesario para jugar béisbol",
+          "respuestas": [
+            { "texto": "Bate", "puntos": 45 },
+            { "texto": "Pelota", "puntos": 30 },
+            { "texto": "Guante", "puntos": 15 },
+            { "texto": "Gorra", "puntos": 5 },
+            { "texto": "Casco", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Posición en la que juega un futbolista (Soccer)",
+          "respuestas": [
+            { "texto": "Portero", "puntos": 45 },
+            { "texto": "Delantero", "puntos": 25 },
+            { "texto": "Defensa", "puntos": 15 },
+            { "texto": "Medio", "puntos": 10 },
+            { "texto": "Árbitro", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Menciona un objeto que se usa en la Lucha Libre",
+          "respuestas": [
+            { "texto": "Máscara", "puntos": 60 },
+            { "texto": "Ring", "puntos": 20 },
+            { "texto": "Silla", "puntos": 10 },
+            { "texto": "Capa", "puntos": 5 },
+            { "texto": "Cabellera", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Equipo de Béisbol famoso de la CDMX",
+          "respuestas": [
+            { "texto": "Diablos Rojos", "puntos": 60 },
+            { "texto": "Tigres", "puntos": 20 },
+            { "texto": "Charros", "puntos": 10 },
+            { "texto": "Sultanes", "puntos": 5 },
+            { "texto": "Acereros", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Futbolista mexicano famoso por sus rizos (portero)",
+          "respuestas": [
+            { "texto": "Memo Ochoa", "puntos": 70 },
+            { "texto": "Jorge Campos", "puntos": 15 },
+            { "texto": "Acevedo", "puntos": 5 },
+            { "texto": "Oswaldo Sánchez", "puntos": 5 },
+            { "texto": "Corona", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Color de una tarjeta que usa el árbitro de fútbol",
+          "respuestas": [
+            { "texto": "Amarilla", "puntos": 50 },
+            { "texto": "Roja", "puntos": 40 },
+            { "texto": "Verde", "puntos": 5 },
+            { "texto": "Negra", "puntos": 3 },
+            { "texto": "Blanca", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Marca de tenis o ropa deportiva muy famosa",
+          "respuestas": [
+            { "texto": "Nike", "puntos": 50 },
+            { "texto": "Adidas", "puntos": 30 },
+            { "texto": "Puma", "puntos": 10 },
+            { "texto": "Charly", "puntos": 5 },
+            { "texto": "Reebok", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato que encuentras en un gimnasio",
+          "respuestas": [
+            { "texto": "Caminadora", "puntos": 40 },
+            { "texto": "Pesas", "puntos": 30 },
+            { "texto": "Bicicleta", "puntos": 20 },
+            { "texto": "Elíptica", "puntos": 5 },
+            { "texto": "Espejo", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Rival deportivo del América (El Clásico)",
+          "respuestas": [
+            { "texto": "Chivas", "puntos": 75 },
+            { "texto": "Pumas", "puntos": 10 },
+            { "texto": "Cruz Azul", "puntos": 10 },
+            { "texto": "Tigres", "puntos": 3 },
+            { "texto": "Atlas", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Campeón mundial de boxeo mexicano (Leyenda)",
+          "respuestas": [
+            { "texto": "Julio César Chávez", "puntos": 60 },
+            { "texto": "Canelo Álvarez", "puntos": 25 },
+            { "texto": "Márquez", "puntos": 5 },
+            { "texto": "Maromero Paez", "puntos": 5 },
+            { "texto": "Travieso Arce", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Mascota del equipo Pumas UNAM",
+          "respuestas": [
+            { "texto": "Puma", "puntos": 70 },
+            { "texto": "Un gato", "puntos": 15 },
+            { "texto": "León", "puntos": 10 },
+            { "texto": "Tigre", "puntos": 3 },
+            { "texto": "Goyo", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Mascota del equipo Cruz Azul",
+          "respuestas": [
+            { "texto": "Conejo", "puntos": 40 },
+            { "texto": "Liebre", "puntos": 30 },
+            { "texto": "Tren", "puntos": 20 },
+            { "texto": "Cemento", "puntos": 5 },
+            { "texto": "Pitufos", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Mascota del equipo Chivas",
+          "respuestas": [
+            { "texto": "Chiva", "puntos": 70 },
+            { "texto": "Rebaño", "puntos": 20 },
+            { "texto": "Borrego", "puntos": 5 },
+            { "texto": "Cabra", "puntos": 3 },
+            { "texto": "Chivagol", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Mascota del equipo América",
+          "respuestas": [
+            { "texto": "Águila", "puntos": 75 },
+            { "texto": "Pollo", "puntos": 10 },
+            { "texto": "Pájaro", "puntos": 5 },
+            { "texto": "Millonario", "puntos": 5 },
+            { "texto": "Canario", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Narrador de fútbol famoso",
+          "respuestas": [
+            { "texto": "Perro Bermúdez", "puntos": 65 },
+            { "texto": "Christian Martinoli", "puntos": 20 },
+            { "texto": "Luis García", "puntos": 5 },
+            { "texto": "Jorge Campos", "puntos": 5 },
+            { "texto": "Orvañanos", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Menciona un deporte olímpico donde México suele ganar medalla",
+          "respuestas": [
+            { "texto": "Clavados", "puntos": 40 },
+            { "texto": "Taekwondo", "puntos": 30 },
+            { "texto": "Tiro con arco", "puntos": 15 },
+            { "texto": "Caminata", "puntos": 10 },
+            { "texto": "Boxeo", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Frase famosa de 'No era...'",
+          "respuestas": [
+            { "texto": "Penal", "puntos": 85 },
+            { "texto": "Gol", "puntos": 5 },
+            { "texto": "Falta", "puntos": 5 },
+            { "texto": "Mano", "puntos": 3 },
+            { "texto": "Fuera de lugar", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Jugador apodado 'El Kaiser'",
+          "respuestas": [
+            { "texto": "Rafa Márquez", "puntos": 75 },
+            { "texto": "Miguel Layun", "puntos": 10 },
+            { "texto": "Salcido", "puntos": 5 },
+            { "texto": "Guardado", "puntos": 5 },
+            { "texto": "Beckenbauer", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Quien fue el 'Pentapichichi'",
+          "respuestas": [
+            { "texto": "Hugo Sanchez", "puntos": 65 },
+            { "texto": "Chicharito", "puntos": 25 },
+            { "texto": "Carlos Vela", "puntos": 5 },
+            { "texto": "Cuauhtémoc Blanco", "puntos": 3 },
+            { "texto": "Borgetti", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Deporte que se juega en el Super Bowl",
+          "respuestas": [
+            { "texto": "Fútbol Americano", "puntos": 75 },
+            { "texto": "Tochito", "puntos": 15 },
+            { "texto": "Rugby", "puntos": 5 },
+            { "texto": "Fútbol", "puntos": 3 },
+            { "texto": "Béisbol", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Nombre del estadio de los Tigres",
+          "respuestas": [
+            { "texto": "Estadio Universitario", "puntos": 55 },
+            { "texto": "El Volcán", "puntos": 25 },
+            { "texto": "BBVA", "puntos": 10 },
+            { "texto": "Tecnológico", "puntos": 5 },
+            { "texto": "Sultán", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "País contra el que siempre pierde México en Mundiales (Maldición)",
+          "respuestas": [
+            { "texto": "Argentina", "puntos": 40 },
+            { "texto": "Estados Unidos", "puntos": 30 },
+            { "texto": "Brasil", "puntos": 15 },
+            { "texto": "Alemania", "puntos": 10 },
+            { "texto": "Holanda", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Torneo de fútbol mexicano actual se llama...",
+          "respuestas": [
+            { "texto": "Liga MX", "puntos": 65 },
+            { "texto": "Copa MX", "puntos": 20 },
+            { "texto": "Liga BBVA MX", "puntos": 5 },
+            { "texto": "Apertura", "puntos": 5 },
+            { "texto": "Clausura", "puntos": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Ciencia",
+      "preguntas": [
+        {
+          "pregunta": "¿Qué haces cuando el internet está lento?",
+          "respuestas": [
+            { "texto": "Reiniciar el módem", "puntos": 45 },
+            { "texto": "Desconectar el modem", "puntos": 25 },
+            { "texto": "Llamar a la compañía", "puntos": 15 },
+            { "texto": "Acercarme al modem", "puntos": 10 },
+            { "texto": "Gritar", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato de la cocina que hace mucho ruido",
+          "respuestas": [
+            { "texto": "Licuadora", "puntos": 55 },
+            { "texto": "Batidora", "puntos": 20 },
+            { "texto": "Microondas", "puntos": 10 },
+            { "texto": "Exprimidor", "puntos": 10 },
+            { "texto": "Refrigerador", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usa pilas (baterías)",
+          "respuestas": [
+            { "texto": "Control", "puntos": 45 },
+            { "texto": "Juguete", "puntos": 25 },
+            { "texto": "Reloj", "puntos": 15 },
+            { "texto": "Lampara", "puntos": 10 },
+            { "texto": "Radio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "¿Qué se le acaba al coche si no pasas a la gasolinera?",
+          "respuestas": [
+            { "texto": "Gasolina", "puntos": 75 },
+            { "texto": "Aire", "puntos": 10 },
+            { "texto": "Aceite", "puntos": 5 },
+            { "texto": "Anticongelante", "puntos": 5 },
+            { "texto": "Agua", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Parte del cuerpo que usas para desbloquear el celular",
+          "respuestas": [
+            { "texto": "Huella", "puntos": 55 },
+            { "texto": "Cara", "puntos": 30 },
+            { "texto": "Mano", "puntos": 5 },
+            { "texto": "Ojo", "puntos": 5 },
+            { "texto": "Pulgar", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato que sirve para calentar agua para bañarse",
+          "respuestas": [
+            { "texto": "Boiler", "puntos": 65 },
+            { "texto": "Resistencia", "puntos": 20 },
+            { "texto": "Regadera electrica", "puntos": 5 },
+            { "texto": "Olla en la estufa", "puntos": 5 },
+            { "texto": "Calentador solar", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Fenómeno natural que trae agua del cielo",
+          "respuestas": [
+            { "texto": "Lluvia", "puntos": 75 },
+            { "texto": "Granizo", "puntos": 10 },
+            { "texto": "Tormenta", "puntos": 5 },
+            { "texto": "Huracán", "puntos": 5 },
+            { "texto": "Nieve", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Algo que cargas en la mochila por si llueve",
+          "respuestas": [
+            { "texto": "Paraguas", "puntos": 55 },
+            { "texto": "Impermeable", "puntos": 25 },
+            { "texto": "Bolsa", "puntos": 10 },
+            { "texto": "Sudadera", "puntos": 5 },
+            { "texto": "Gorra", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Insecto volador muy molesto en la casa",
+          "respuestas": [
+            { "texto": "Mosca", "puntos": 45 },
+            { "texto": "Zancudo", "puntos": 40 },
+            { "texto": "Abeja", "puntos": 5 },
+            { "texto": "Mosco", "puntos": 5 },
+            { "texto": "Polilla", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato para ver series y películas",
+          "respuestas": [
+            { "texto": "Pantalla", "puntos": 45 },
+            { "texto": "Celular", "puntos": 25 },
+            { "texto": "Computadora", "puntos": 15 },
+            { "texto": "Tablet", "puntos": 10 },
+            { "texto": "Cine", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Metal precioso de color gris (México produce mucho)",
+          "respuestas": [
+            { "texto": "Plata", "puntos": 65 },
+            { "texto": "Acero", "puntos": 15 },
+            { "texto": "Hierro", "puntos": 10 },
+            { "texto": "Platino", "puntos": 5 },
+            { "texto": "Aluminio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Órgano del cuerpo que late",
+          "respuestas": [
+            { "texto": "Corazón", "puntos": 80 },
+            { "texto": "Cerebro", "puntos": 5 },
+            { "texto": "Pulmón", "puntos": 5 },
+            { "texto": "Estómago", "puntos": 5 },
+            { "texto": "Hígado", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Planeta donde vivimos",
+          "respuestas": [
+            { "texto": "Tierra", "puntos": 85 },
+            { "texto": "Marte", "puntos": 5 },
+            { "texto": "México", "puntos": 4 },
+            { "texto": "Júpiter", "puntos": 3 },
+            { "texto": "El Sol", "puntos": 3 }
+          ]
+        },
+        {
+          "pregunta": "Accesorio de la computadora que mueves con la mano",
+          "respuestas": [
+            { "texto": "Ratón", "puntos": 75 },
+            { "texto": "Teclado", "puntos": 10 },
+            { "texto": "USB", "puntos": 5 },
+            { "texto": "Pantalla", "puntos": 5 },
+            { "texto": "Cables", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lo que se va cuando hay un apagón",
+          "respuestas": [
+            { "texto": "La luz", "puntos": 70 },
+            { "texto": "El internet", "puntos": 15 },
+            { "texto": "La señal", "puntos": 5 },
+            { "texto": "La tele", "puntos": 5 },
+            { "texto": "El agua", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar a donde vas si te duelen los dientes",
+          "respuestas": [
+            { "texto": "Dentista", "puntos": 75 },
+            { "texto": "Consultorio", "puntos": 10 },
+            { "texto": "Farmacia", "puntos": 5 },
+            { "texto": "Hospital", "puntos": 5 },
+            { "texto": "Con la mamá", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Utensilio escolar para trazar líneas rectas",
+          "respuestas": [
+            { "texto": "Regla", "puntos": 55 },
+            { "texto": "Escuadra", "puntos": 25 },
+            { "texto": "Transportador", "puntos": 10 },
+            { "texto": "Lápiz", "puntos": 5 },
+            { "texto": "Credencial", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Líquido vital para sobrevivir",
+          "respuestas": [
+            { "texto": "Agua", "puntos": 75 },
+            { "texto": "Sangre", "puntos": 10 },
+            { "texto": "Refresco", "puntos": 5 },
+            { "texto": "Cerveza", "puntos": 5 },
+            { "texto": "Leche", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Fuente de luz natural en el día",
+          "respuestas": [
+            { "texto": "Sol", "puntos": 80 },
+            { "texto": "Fuego", "puntos": 5 },
+            { "texto": "Lámpara", "puntos": 5 },
+            { "texto": "Foco", "puntos": 5 },
+            { "texto": "Ventana", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato que usas para tomar fotos",
+          "respuestas": [
+            { "texto": "Celular", "puntos": 55 },
+            { "texto": "Cámara", "puntos": 30 },
+            { "texto": "Tablet", "puntos": 5 },
+            { "texto": "GoPro", "puntos": 5 },
+            { "texto": "Computadora", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lo que necesitas saber para entrar a tu correo o Facebook",
+          "respuestas": [
+            { "texto": "Contraseña", "puntos": 55 },
+            { "texto": "Usuario", "puntos": 25 },
+            { "texto": "Internet", "puntos": 10 },
+            { "texto": "Clave", "puntos": 5 },
+            { "texto": "El chisme", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Unidad de medida para comprar tortillas",
+          "respuestas": [
+            { "texto": "Kilo", "puntos": 70 },
+            { "texto": "Medio kilo", "puntos": 15 },
+            { "texto": "Pesos", "puntos": 5 },
+            { "texto": "Montón", "puntos": 5 },
+            { "texto": "Docena", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Animal que pone huevos y comemos en el desayuno",
+          "respuestas": [
+            { "texto": "Gallina", "puntos": 80 },
+            { "texto": "Pollo", "puntos": 10 },
+            { "texto": "Pato", "puntos": 4 },
+            { "texto": "Gallo", "puntos": 3 },
+            { "texto": "Vaca", "puntos": 3 }
+          ]
+        },
+        {
+          "pregunta": "Color del cielo cuando está despejado",
+          "respuestas": [
+            { "texto": "Azul", "puntos": 75 },
+            { "texto": "Celeste", "puntos": 15 },
+            { "texto": "Blanco", "puntos": 5 },
+            { "texto": "Gris", "puntos": 3 },
+            { "texto": "Negro", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Instrumento para ver cosas muy pequeñas (laboratorio)",
+          "respuestas": [
+            { "texto": "Microscopio", "puntos": 75 },
+            { "texto": "Lupa", "puntos": 15 },
+            { "texto": "Lentes", "puntos": 5 },
+            { "texto": "Telescopio", "puntos": 3 },
+            { "texto": "Ojos", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Aparato que sirve para enfriar la comida",
+          "respuestas": [
+            { "texto": "Refrigerador", "puntos": 70 },
+            { "texto": "Congelador", "puntos": 15 },
+            { "texto": "Hielera", "puntos": 5 },
+            { "texto": "Microondas", "puntos": 5 },
+            { "texto": "Ventilador", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aplicación de mensajería más usada (icono verde)",
+          "respuestas": [
+            { "texto": "WhatsApp", "puntos": 80 },
+            { "texto": "Mensajes", "puntos": 5 },
+            { "texto": "Teléfono", "puntos": 5 },
+            { "texto": "Messenger", "puntos": 5 },
+            { "texto": "Line", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato para lavar la ropa",
+          "respuestas": [
+            { "texto": "Lavadora", "puntos": 75 },
+            { "texto": "Lavadero", "puntos": 15 },
+            { "texto": "Secadora", "puntos": 5 },
+            { "texto": "Cubeta", "puntos": 3 },
+            { "texto": "Mano", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Gas que respiramos (lo aprendes en la escuela)",
+          "respuestas": [
+            { "texto": "Oxígeno", "puntos": 65 },
+            { "texto": "Aire", "puntos": 20 },
+            { "texto": "Dióxido", "puntos": 5 },
+            { "texto": "Humo", "puntos": 5 },
+            { "texto": "Helio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Aparato para escuchar música en la calle (individual)",
+          "respuestas": [
+            { "texto": "Audífonos", "puntos": 65 },
+            { "texto": "Celular", "puntos": 20 },
+            { "texto": "Bocina", "puntos": 10 },
+            { "texto": "Radio", "puntos": 3 },
+            { "texto": "Walkman", "puntos": 2 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Geografía",
+      "preguntas": [
+        {
+          "pregunta": "Estado de la República famoso por su Tequila",
+          "respuestas": [
+            { "texto": "Jalisco", "puntos": 80 },
+            { "texto": "Guanajuato", "puntos": 10 },
+            { "texto": "Michoacán", "puntos": 4 },
+            { "texto": "Nayarit", "puntos": 3 },
+            { "texto": "Tequila", "puntos": 3 }
+          ]
+        },
+        {
+          "pregunta": "Ciudad conocida por tener mucho tráfico y gente",
+          "respuestas": [
+            { "texto": "Ciudad de México", "puntos": 70 },
+            { "texto": "Monterrey", "puntos": 15 },
+            { "texto": "Guadalajara", "puntos": 10 },
+            { "texto": "Estado de México", "puntos": 3 },
+            { "texto": "Puebla", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Lugar famoso por sus momias",
+          "respuestas": [
+            { "texto": "Guanajuato", "puntos": 80 },
+            { "texto": "Egipto", "puntos": 10 },
+            { "texto": "Museo", "puntos": 5 },
+            { "texto": "Panteón", "puntos": 3 },
+            { "texto": "Puebla", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Playa del Caribe Mexicano muy visitada por extranjeros",
+          "respuestas": [
+            { "texto": "Cancún", "puntos": 55 },
+            { "texto": "Tulum", "puntos": 20 },
+            { "texto": "Playa del Carmen", "puntos": 15 },
+            { "texto": "Cozumel", "puntos": 5 },
+            { "texto": "Isla Mujeres", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Estado donde hacen las mejores carnes asadas (El Norte)",
+          "respuestas": [
+            { "texto": "Nuevo León", "puntos": 45 },
+            { "texto": "Sonora", "puntos": 35 },
+            { "texto": "Chihuahua", "puntos": 10 },
+            { "texto": "Coahuila", "puntos": 5 },
+            { "texto": "Sinaloa", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde se avientan clavadistas desde una altura peligrosa",
+          "respuestas": [
+            { "texto": "La Quebrada", "puntos": 75 },
+            { "texto": "El mar", "puntos": 10 },
+            { "texto": "Alberca", "puntos": 5 },
+            { "texto": "Mazatlán", "puntos": 5 },
+            { "texto": "Acapulco", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Estado famoso por el Mole Poblano",
+          "respuestas": [
+            { "texto": "Puebla", "puntos": 75 },
+            { "texto": "Oaxaca", "puntos": 15 },
+            { "texto": "CDMX", "puntos": 5 },
+            { "texto": "Tlaxcala", "puntos": 3 },
+            { "texto": "Veracruz", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Estado donde se dicen 'Bombas' (Rimas)",
+          "respuestas": [
+            { "texto": "Yucatán", "puntos": 75 },
+            { "texto": "Veracruz", "puntos": 10 },
+            { "texto": "Campeche", "puntos": 10 },
+            { "texto": "Quintana Roo", "puntos": 3 },
+            { "texto": "Tabasco", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Ciudad donde comen Tortas Ahogadas",
+          "respuestas": [
+            { "texto": "Guadalajara", "puntos": 65 },
+            { "texto": "Jalisco", "puntos": 20 },
+            { "texto": "CDMX", "puntos": 5 },
+            { "texto": "Zapopan", "puntos": 5 },
+            { "texto": "Tlaquepaque", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Estado donde llega la Mariposa Monarca",
+          "respuestas": [
+            { "texto": "Michoacán", "puntos": 65 },
+            { "texto": "Estado de México", "puntos": 20 },
+            { "texto": "Morelos", "puntos": 5 },
+            { "texto": "Guanajuato", "puntos": 5 },
+            { "texto": "Puebla", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "El estado más pequeño de México (Dicen que no existe)",
+          "respuestas": [
+            { "texto": "Tlaxcala", "puntos": 55 },
+            { "texto": "Colima", "puntos": 20 },
+            { "texto": "Morelos", "puntos": 10 },
+            { "texto": "Aguascalientes", "puntos": 10 },
+            { "texto": "CDMX", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "País vecino del Norte",
+          "respuestas": [
+            { "texto": "Estados Unidos", "puntos": 85 },
+            { "texto": "Canadá", "puntos": 5 },
+            { "texto": "Guatemala", "puntos": 5 },
+            { "texto": "El Gabacho", "puntos": 3 },
+            { "texto": "Texas", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Lugar turístico famoso por sus canales y trajineras",
+          "respuestas": [
+            { "texto": "Xochimilco", "puntos": 75 },
+            { "texto": "CDMX", "puntos": 10 },
+            { "texto": "Venecia", "puntos": 5 },
+            { "texto": "Lago de Chapala", "puntos": 5 },
+            { "texto": "Pátzcuaro", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Volcán famoso cerca de la Ciudad de México",
+          "respuestas": [
+            { "texto": "Popocatépetl", "puntos": 45 },
+            { "texto": "Iztaccíhuatl", "puntos": 30 },
+            { "texto": "Nevado de Toluca", "puntos": 15 },
+            { "texto": "Pico de Orizaba", "puntos": 5 },
+            { "texto": "Ajusco", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde se producen muchos zapatos",
+          "respuestas": [
+            { "texto": "León", "puntos": 75 },
+            { "texto": "Jalisco", "puntos": 10 },
+            { "texto": "CDMX", "puntos": 5 },
+            { "texto": "Guanajuato", "puntos": 5 },
+            { "texto": "Guadalajara", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Pirámide Maya más famosa (Maravilla del mundo)",
+          "respuestas": [
+            { "texto": "Chichén Itzá", "puntos": 55 },
+            { "texto": "Teotihuacán", "puntos": 25 },
+            { "texto": "Palenque", "puntos": 10 },
+            { "texto": "Tulum", "puntos": 5 },
+            { "texto": "Uxmal", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Estado conocido por el café",
+          "respuestas": [
+            { "texto": "Veracruz", "puntos": 40 },
+            { "texto": "Chiapas", "puntos": 35 },
+            { "texto": "Oaxaca", "puntos": 15 },
+            { "texto": "Puebla", "puntos": 5 },
+            { "texto": "Hidalgo", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde se encuentra el 'Cerro de la Silla'",
+          "respuestas": [
+            { "texto": "Monterrey", "puntos": 65 },
+            { "texto": "Nuevo León", "puntos": 25 },
+            { "texto": "Saltillo", "puntos": 5 },
+            { "texto": "Guadalupe", "puntos": 3 },
+            { "texto": "San Pedro", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Estado que empieza con la letra Z",
+          "respuestas": [
+            { "texto": "Zacatecas", "puntos": 85 },
+            { "texto": "Zapopan", "puntos": 5 },
+            { "texto": "Zihuatanejo", "puntos": 5 },
+            { "texto": "Zamora", "puntos": 3 },
+            { "texto": "Zaragoza", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Ciudad fronteriza muy famosa (La más visitada)",
+          "respuestas": [
+            { "texto": "Tijuana", "puntos": 45 },
+            { "texto": "Ciudad Juárez", "puntos": 30 },
+            { "texto": "Laredo", "puntos": 10 },
+            { "texto": "Reynosa", "puntos": 10 },
+            { "texto": "Matamoros", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde viven los 'Jarochos'",
+          "respuestas": [
+            { "texto": "Veracruz", "puntos": 85 },
+            { "texto": "El Puerto", "puntos": 5 },
+            { "texto": "Boca del Río", "puntos": 5 },
+            { "texto": "Xalapa", "puntos": 3 },
+            { "texto": "Alvarado", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Isla famosa de México para vacacionar",
+          "respuestas": [
+            { "texto": "Cozumel", "puntos": 35 },
+            { "texto": "Isla Mujeres", "puntos": 30 },
+            { "texto": "Holbox", "puntos": 20 },
+            { "texto": "Marietas", "puntos": 10 },
+            { "texto": "Janitzio", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Estado donde se inventaron las 'Carnitas'",
+          "respuestas": [
+            { "texto": "Michoacán", "puntos": 65 },
+            { "texto": "Jalisco", "puntos": 15 },
+            { "texto": "CDMX", "puntos": 10 },
+            { "texto": "Querétaro", "puntos": 5 },
+            { "texto": "Guanajuato", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Ciudad conocida como 'La Perla Tapatía'",
+          "respuestas": [
+            { "texto": "Guadalajara", "puntos": 85 },
+            { "texto": "Zapopan", "puntos": 5 },
+            { "texto": "Tlaquepaque", "puntos": 5 },
+            { "texto": "Jalisco", "puntos": 3 },
+            { "texto": "Tonalá", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde se encuentra la estatua del 'Cristo Roto'",
+          "respuestas": [
+            { "texto": "Aguascalientes", "puntos": 65 },
+            { "texto": "Guanajuato", "puntos": 20 },
+            { "texto": "Coahuila", "puntos": 10 },
+            { "texto": "San José de Gracia", "puntos": 3 },
+            { "texto": "Zacatecas", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Estado famoso por sus pastes (empanadas)",
+          "respuestas": [
+            { "texto": "Hidalgo", "puntos": 75 },
+            { "texto": "Puebla", "puntos": 10 },
+            { "texto": "CDMX", "puntos": 10 },
+            { "texto": "Pachuca", "puntos": 3 },
+            { "texto": "Real del Monte", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Playa favorita de los capitalinos (Acapulco en la azotea)",
+          "respuestas": [
+            { "texto": "Acapulco", "puntos": 65 },
+            { "texto": "Veracruz", "puntos": 20 },
+            { "texto": "Oaxtepec", "puntos": 10 },
+            { "texto": "Tecolutla", "puntos": 3 },
+            { "texto": "Cuernavaca", "puntos": 2 }
+          ]
+        },
+        {
+          "pregunta": "Estado donde se encuentra la selva Lacandona",
+          "respuestas": [
+            { "texto": "Chiapas", "puntos": 75 },
+            { "texto": "Tabasco", "puntos": 10 },
+            { "texto": "Veracruz", "puntos": 5 },
+            { "texto": "Oaxaca", "puntos": 5 },
+            { "texto": "Yucatán", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lo que comen en CDMX dentro de un bolillo (aparte de torta)",
+          "respuestas": [
+            { "texto": "Tamal", "puntos": 55 },
+            { "texto": "Chilaquiles", "puntos": 30 },
+            { "texto": "Helado", "puntos": 5 },
+            { "texto": "Tacos", "puntos": 5 },
+            { "texto": "Gelatina", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Color de la bandera de México (aparte del escudo)",
+          "respuestas": [
+            { "texto": "Verde", "puntos": 35 },
+            { "texto": "Blanco", "puntos": 35 },
+            { "texto": "Rojo", "puntos": 25 },
+            { "texto": "Café", "puntos": 3 },
+            { "texto": "Dorado", "puntos": 2 }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "Cultura Pop",
+      "preguntas": [
+        {
+          "pregunta": "Excusa típica para llegar tarde al trabajo o escuela",
+          "respuestas": [
+            { "texto": "Había mucho tráfico", "puntos": 50 },
+            { "texto": "Me quede dormido", "puntos": 25 },
+            { "texto": "No pasó el camión", "puntos": 15 },
+            { "texto": "Se enfermó mi abuelita", "puntos": 5 },
+            { "texto": "Se descompuso el coche", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Cosa que siempre traen las mamás en la bolsa",
+          "respuestas": [
+            { "texto": "Papel", "puntos": 35 },
+            { "texto": "Maquillaje", "puntos": 25 },
+            { "texto": "Cartera", "puntos": 20 },
+            { "texto": "Llaves", "puntos": 10 },
+            { "texto": "Celular", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Algo que se te pierde muy seguido",
+          "respuestas": [
+            { "texto": "Llaves", "puntos": 40 },
+            { "texto": "Celular", "puntos": 25 },
+            { "texto": "Dinero", "puntos": 15 },
+            { "texto": "Control remoto", "puntos": 10 },
+            { "texto": "La dignidad", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Regalo clásico para el Día de las Madres",
+          "respuestas": [
+            { "texto": "Flores", "puntos": 50 },
+            { "texto": "Ropa", "puntos": 20 },
+            { "texto": "Perfume", "puntos": 15 },
+            { "texto": "Chocolates", "puntos": 10 },
+            { "texto": "Electrodomésticos", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Mentira piadosa que dicen los hombres",
+          "respuestas": [
+            { "texto": "Ya voy llegando", "puntos": 40 },
+            { "texto": "Es solo una amiga", "puntos": 30 },
+            { "texto": "La última y nos vamos", "puntos": 20 },
+            { "texto": "No estoy borracho", "puntos": 10 },
+            { "texto": "No tengo dinero", "puntos": 0 }
+          ]
+        },
+        {
+          "pregunta": "Mentira piadosa que dicen las mujeres",
+          "respuestas": [
+            { "texto": "Ya estoy lista", "puntos": 50 },
+            { "texto": "No estoy enojada", "puntos": 30 },
+            { "texto": "Estaba en oferta", "puntos": 10 },
+            { "texto": "Mañana empiezo la dieta", "puntos": 5 },
+            { "texto": "Haz lo que quieras", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde está prohibido o mal visto usar el celular",
+          "respuestas": [
+            { "texto": "Cine", "puntos": 45 },
+            { "texto": "Iglesia", "puntos": 30 },
+            { "texto": "Clase", "puntos": 10 },
+            { "texto": "Banco", "puntos": 10 },
+            { "texto": "Manejando", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Cosas que venden en los semáforos en México",
+          "respuestas": [
+            { "texto": "Dulces", "puntos": 40 },
+            { "texto": "Limpiaparabrisas", "puntos": 25 },
+            { "texto": "Refrescos", "puntos": 15 },
+            { "texto": "Cargadores", "puntos": 10 },
+            { "texto": "Banderas", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Animal al que mucha gente le tiene asco o miedo",
+          "respuestas": [
+            { "texto": "Cucaracha", "puntos": 50 },
+            { "texto": "Rata", "puntos": 25 },
+            { "texto": "Araña", "puntos": 15 },
+            { "texto": "Serpiente", "puntos": 5 },
+            { "texto": "Alacrán", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usas para abrir una cerveza si no tienes destapador",
+          "respuestas": [
+            { "texto": "Encendedor", "puntos": 45 },
+            { "texto": "Cuchara", "puntos": 25 },
+            { "texto": "Dientes", "puntos": 15 },
+            { "texto": "Anillo", "puntos": 10 },
+            { "texto": "Con la mesa", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Apodo cariñoso para tu pareja",
+          "respuestas": [
+            { "texto": "Mi amor", "puntos": 40 },
+            { "texto": "Bebé", "puntos": 25 },
+            { "texto": "Mi vida", "puntos": 20 },
+            { "texto": "Mi cielo", "puntos": 10 },
+            { "texto": "Ruca", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Algo que pides prestado al vecino",
+          "respuestas": [
+            { "texto": "Azúcar", "puntos": 50 },
+            { "texto": "Dinero", "puntos": 20 },
+            { "texto": "Sillas", "puntos": 15 },
+            { "texto": "Internet", "puntos": 10 },
+            { "texto": "Herramienta", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Razón para hacer una fiesta en México",
+          "respuestas": [
+            { "texto": "Cumpleaños", "puntos": 45 },
+            { "texto": "Boda", "puntos": 20 },
+            { "texto": "Bautizo", "puntos": 15 },
+            { "texto": "15 de Septiembre", "puntos": 10 },
+            { "texto": "Fútbol", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Cosa que le escondes a tus papás cuando eres joven",
+          "respuestas": [
+            { "texto": "Pareja", "puntos": 35 },
+            { "texto": "Calificaciones", "puntos": 30 },
+            { "texto": "Cigarros", "puntos": 20 },
+            { "texto": "Tatuajes", "puntos": 10 },
+            { "texto": "Dinero", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Juego de mesa clásico para jugar en familia",
+          "respuestas": [
+            { "texto": "Lotería", "puntos": 40 },
+            { "texto": "Dominó", "puntos": 25 },
+            { "texto": "Uno", "puntos": 15 },
+            { "texto": "Turista", "puntos": 10 },
+            { "texto": "Baraja", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Lo primero que haces al despertar",
+          "respuestas": [
+            { "texto": "Ver el celular", "puntos": 55 },
+            { "texto": "Ir al baño", "puntos": 25 },
+            { "texto": "Apagar la alarma", "puntos": 10 },
+            { "texto": "Lavarse los dientes", "puntos": 5 },
+            { "texto": "Tomar agua", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lugar donde te da miedo entrar de noche",
+          "respuestas": [
+            { "texto": "Panteón", "puntos": 50 },
+            { "texto": "Callejón oscuro", "puntos": 25 },
+            { "texto": "Casa abandonada", "puntos": 15 },
+            { "texto": "Baño", "puntos": 5 },
+            { "texto": "Sótano", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Profesión que usa uniforme",
+          "respuestas": [
+            { "texto": "Policía", "puntos": 35 },
+            { "texto": "Doctor", "puntos": 30 },
+            { "texto": "Bombero", "puntos": 15 },
+            { "texto": "Soldado", "puntos": 10 },
+            { "texto": "Mesero", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que encuentras debajo de la cama",
+          "respuestas": [
+            { "texto": "Tenis", "puntos": 40 },
+            { "texto": "Chanclas", "puntos": 30 },
+            { "texto": "Ropa", "puntos": 15 },
+            { "texto": "Calcetines", "puntos": 10 },
+            { "texto": "Zapatos", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Fruta que tiene semillas",
+          "respuestas": [
+            { "texto": "Sandía", "puntos": 40 },
+            { "texto": "Papaya", "puntos": 25 },
+            { "texto": "Melón", "puntos": 15 },
+            { "texto": "Mango", "puntos": 10 },
+            { "texto": "Aguacate", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Cosa roja que no es una fruta",
+          "respuestas": [
+            { "texto": "Sangre", "puntos": 40 },
+            { "texto": "Corazón", "puntos": 30 },
+            { "texto": "Rosas", "puntos": 15 },
+            { "texto": "Semáforo", "puntos": 10 },
+            { "texto": "Carro", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Algo que se rompe fácilmente",
+          "respuestas": [
+            { "texto": "Vidrio", "puntos": 50 },
+            { "texto": "Huevo", "puntos": 20 },
+            { "texto": "Espejo", "puntos": 15 },
+            { "texto": "Promesas", "puntos": 10 },
+            { "texto": "Corazón", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Animal que sale en las películas de terror",
+          "respuestas": [
+            { "texto": "Murciélago", "puntos": 30 },
+            { "texto": "Araña", "puntos": 25 },
+            { "texto": "Lobo", "puntos": 20 },
+            { "texto": "Cuervo", "puntos": 15 },
+            { "texto": "Gato negro", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Lugar ideal para una primera cita",
+          "respuestas": [
+            { "texto": "Cine", "puntos": 40 },
+            { "texto": "Restaurante", "puntos": 30 },
+            { "texto": "Café", "puntos": 15 },
+            { "texto": "Parque", "puntos": 10 },
+            { "texto": "Bar", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Lo que haces cuando se va la luz en la noche",
+          "respuestas": [
+            { "texto": "Prender velas", "puntos": 50 },
+            { "texto": "Usar el celular", "puntos": 30 },
+            { "texto": "Gritar", "puntos": 10 },
+            { "texto": "Dormir", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Prenda de ropa que más regalan en Navidad",
+          "respuestas": [
+            { "texto": "Calcetines", "puntos": 45 },
+            { "texto": "Suéter", "puntos": 30 },
+            { "texto": "Bufanda", "puntos": 10 },
+            { "texto": "Pijama", "puntos": 10 },
+            { "texto": "Ropa interior", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Algo que se come con cuchara",
+          "respuestas": [
+            { "texto": "Caldo", "puntos": 60 },
+            { "texto": "Cereal", "puntos": 20 },
+            { "texto": "Nieve", "puntos": 10 },
+            { "texto": "Gelatina", "puntos": 5 },
+            { "texto": "Sopa", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Personaje de terror mexicano (Leyenda)",
+          "respuestas": [
+            { "texto": "La Llorona", "puntos": 70 },
+            { "texto": "El Chupacabras", "puntos": 15 },
+            { "texto": "El Coco", "puntos": 10 },
+            { "texto": "La Nahuala", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Accesorio que usan los hombres en la cabeza",
+          "respuestas": [
+            { "texto": "Gorra", "puntos": 60 },
+            { "texto": "Sombrero", "puntos": 30 },
+            { "texto": "Gorro", "puntos": 10 }
+          ]
+        },
+        {
+          "pregunta": "Lo peor que te puede pasar en un baño público",
+          "respuestas": [
+            { "texto": "Que no haya papel", "puntos": 70 },
+            { "texto": "Que no baje el agua", "puntos": 15 },
+            { "texto": "Que esté sucio", "puntos": 10 },
+            { "texto": "Que no haya agua", "puntos": 5 }
           ]
         }
       ]
