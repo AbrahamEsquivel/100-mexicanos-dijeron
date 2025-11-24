@@ -1824,6 +1824,61 @@
           ]
         }
       ]
+    },
+    {
+      "nombre": "Objetos",
+      "preguntas": [
+        {
+          "pregunta": "Objeto que usamos para protegernos de la lluvia",
+          "respuestas": [
+            { "texto": "Paraguas", "puntos": 50 },
+            { "texto": "Impermeable", "puntos": 30 },
+            { "texto": "Sombrilla", "puntos": 15 },
+            { "texto": "Gorro", "puntos": 8 },
+            { "texto": "Botas", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Herramienta que sirve para martillar",
+          "respuestas": [
+            { "texto": "Martillo", "puntos": 55 },
+            { "texto": "Mazo", "puntos": 25 },
+            { "texto": "Marro", "puntos": 15 },
+            { "texto": "Piedra", "puntos": 8 },
+            { "texto": "Alicate", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para ver la hora",
+          "respuestas": [
+            { "texto": "Reloj", "puntos": 60 },
+            { "texto": "Telefono", "puntos": 25 },
+            { "texto": "Cronometro", "puntos": 15 },
+            { "texto": "Despertador", "puntos": 8 },
+            { "texto": "Smartwatch", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para cortar papel",
+          "respuestas": [
+            { "texto": "Tijeras", "puntos": 55 },
+            { "texto": "Cizalla", "puntos": 25 },
+            { "texto": "Navaja", "puntos": 15 },
+            { "texto": "Cuter", "puntos": 8 },
+            { "texto": "Estilete", "puntos": 5 }
+          ]
+        },
+        {
+          "pregunta": "Objeto que usamos para sentarnos",
+          "respuestas": [
+            { "texto": "Silla", "puntos": 60 },
+            { "texto": "Banco", "puntos": 25 },
+            { "texto": "Taburete", "puntos": 15 },
+            { "texto": "Butaca", "puntos": 8 },
+            { "texto": "Puf", "puntos": 5 }
+          ]
+        }
+      ]
     }
   ]
 }

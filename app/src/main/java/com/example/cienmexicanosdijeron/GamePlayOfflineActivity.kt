@@ -236,7 +236,7 @@ class GamePlayOfflineActivity : AppCompatActivity() {
 
         btnMachineBuzzer.isClickable = false
         machineAITask = lifecycleScope.launch {
-            delay(Random.nextLong(1000, 4000))
+            delay(Random.nextLong(500, 1500))
             if (!isFaceOffWon) {
                 isFaceOffWon = true
                 btnMachineBuzzer.isPressed = true
