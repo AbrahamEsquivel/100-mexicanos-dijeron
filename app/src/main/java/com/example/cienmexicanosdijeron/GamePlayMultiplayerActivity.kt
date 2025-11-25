@@ -149,60 +149,6 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializeClientGame() {
-        toast("Conectado. Esperando pregunta del Host...")
-        binding.btnMic.visibility = View.GONE
-
-        clientListenerJob?.cancel()
-        clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                // 1) Recibir pregunta
-                val questionCommand = ConnectionManager.dataIn?.readUTF()
-
-                if (questionCommand != null && questionCommand.startsWith("QUESTION::SEP::")) {
-                    val questionJson = questionCommand.substringAfter("QUESTION::SEP::")
-                    currentQuestionData = parseQuestionDataFromJson(questionJson)
-
-                    withContext(Dispatchers.Main) {
-                        if (currentQuestionData != null) {
-                            binding.tvQuestion.text = currentQuestionData!!.question
-                            setupRecyclerView()
-                            showFaceOffDialog()
-                        } else {
-                            toast("Error al recibir la pregunta.")
-                        }
-                    }
-                }
-
-                // 2) Esperar resultado del FACE-OFF
-                val resultCommand = ConnectionManager.dataIn?.readUTF()
-
-                withContext(Dispatchers.Main) {
-                    faceOffDialog?.dismiss()
-
-                    when (resultCommand) {
-                        "YOU_WIN" -> {
-                            toast("¡Ganaste el turno!")
-                            startPlayerTurn()
-                        }
-                        "YOU_LOSE" -> {
-                            toast("¡'$botName' ganó el turno!")
-                            startMachineTurn()
-                        }
-                        else -> {
-                            toast("Respuesta desconocida del host.")
-                        }
-                    }
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    toast("¡Error de conexión!")
-                }
-            }
-        }
-    }
 
     private fun convertQuestionDataToJson(data: QuestionData): String {
         val questionJson = JSONObject()
@@ -454,12 +400,11 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun cleanupAllListeners() {
-        machineAITask?.cancel()
+        // En esta versión unificada, SOLO detenemos timers y el buzzer.
+        // NO detenemos clientListenerJob porque debe seguir escuchando para el "Reset Game" o siguiente ronda.
         thinkingTimer?.cancel()
         answerTimer?.cancel()
-        clientListenerJob?.cancel()
         hostBuzzerListenerJob?.cancel()
-        hostWaitJob?.cancel()
     }
 
     // --------------------------------------------------------------------
@@ -470,15 +415,12 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
 
         speechRecognizer?.setRecognitionListener(object : RecognitionListener {
-
             override fun onReadyForSpeech(params: Bundle?) {
                 binding.btnMic.setImageResource(android.R.drawable.presence_audio_online)
             }
-
             override fun onBeginningOfSpeech() {}
             override fun onRmsChanged(rmsdB: Float) {}
             override fun onBufferReceived(buffer: ByteArray?) {}
-
             override fun onEndOfSpeech() {
                 isRecording = false
                 binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
@@ -491,29 +433,20 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                 binding.pbTimer.visibility = View.GONE
                 binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
 
-                val isSpeechError =
-                    (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
+                val isSpeechError = (error == SpeechRecognizer.ERROR_NO_MATCH || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
 
                 if (isSpeechError) {
                     if (isMultiplayer && !isHost) {
-                        // CLIENTE → mandar al host
-                        toast("No entendí. Enviando...")
-                        binding.btnMic.isEnabled = false
-
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            ConnectionManager.dataOut?.writeUTF("GUESS:error_no_match")
-                            ConnectionManager.dataOut?.flush()
-                        }
-
-                        waitForHostVerification()
+                        // Cliente: Solo notifica error, no decide
+                        sendClientGuess("error_no_match")
                     } else {
-                        // HOST
+                        // Host: Decide fallo
                         toast("No entendí. ¡Incorrecto!")
                         vibrateOnError()
                         addStrike()
                     }
                 } else {
-                    toast("Error de micrófono, intenta de nuevo.")
+                    toast("Error de micrófono. Intenta de nuevo.")
                     if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
                         restoreMicButton()
                         startThinkingTimer()
@@ -527,18 +460,11 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                 answerTimer?.cancel()
                 binding.pbTimer.visibility = View.GONE
 
-                val spokenText = results
-                    ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    ?.getOrNull(0)
+                val spokenText = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.getOrNull(0)
 
                 if (spokenText.isNullOrEmpty()) {
-                    if (isMultiplayer && !isHost) {
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            ConnectionManager.dataOut?.writeUTF("GUESS:error_empty")
-                            ConnectionManager.dataOut?.flush()
-                        }
-                        waitForHostVerification()
-                    } else {
+                    if (isMultiplayer && !isHost) sendClientGuess("error_empty")
+                    else {
                         toast("No entendí. ¡Incorrecto!")
                         vibrateOnError()
                         addStrike()
@@ -546,19 +472,15 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                     return
                 }
 
+                // 🔥 LÓGICA CORREGIDA: ENVIAR Y OLVIDAR
                 if (isMultiplayer && !isHost) {
-                    toast("¡Respuesta enviada! Esperando verificación del anfitrión...")
-                    binding.btnMic.isEnabled = false
-
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        Log.d("NET_CLIENT", "Enviando GUESS: $spokenText")
-                        ConnectionManager.dataOut?.writeUTF("GUESS:$spokenText")
-                        ConnectionManager.dataOut?.flush()
-                    }
-
-                    waitForHostVerification()
+                    toast("Enviando respuesta...")
+                    binding.btnMic.isEnabled = false // Bloqueo visual
+                    binding.btnMic.alpha = 0.5f
+                    sendClientGuess(spokenText)
+                    // YA NO LLAMAMOS A waitForHostVerification()
                 } else {
-                    // HOST
+                    // Host procesa directo
                     checkAnswer(spokenText)
                 }
             }
@@ -569,11 +491,15 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
 
         binding.btnMic.setOnClickListener {
             if (!binding.btnMic.isEnabled) return@setOnClickListener
-            if (isRecording) {
-                stopRecording()
-            } else {
-                checkAudioPermission()
-            }
+            if (isRecording) stopRecording() else checkAudioPermission()
+        }
+    }
+
+    // Helper pequeña para enviar mensajes
+    private fun sendClientGuess(text: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            ConnectionManager.dataOut?.writeUTF("GUESS:$text")
+            ConnectionManager.dataOut?.flush()
         }
     }
 
@@ -624,80 +550,70 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     private fun speakingTimeUp() {
         if (isRecording) {
             stopRecording()
+
             if (isMultiplayer && !isHost) {
-                toast("¡Se acabó el tiempo! Enviando...")
+                toast("¡Tiempo agotado! Enviando...")
+
+                // CORRECCIÓN: Solo enviamos el mensaje.
+                // Ya NO esperamos respuesta aquí, el listener principal lo hará.
                 lifecycleScope.launch(Dispatchers.IO) {
                     ConnectionManager.dataOut?.writeUTF("GUESS:TIMEOUT")
                     ConnectionManager.dataOut?.flush()
                 }
-                waitForHostVerification()
+
             } else {
+                // Lógica del HOST (se queda igual)
                 toast("¡Se acabó el tiempo para hablar!")
                 binding.pbTimer.visibility = View.GONE
                 soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
-                if (isStealAttempt) checkAnswer("TIMEOUT")
-                else {
+
+                if (isStealAttempt) {
+                    checkAnswer("TIMEOUT")
+                } else {
                     addStrike()
-                    if (isPlayerTurn && playerStrikes < 3) startThinkingTimer()
+                    if (isPlayerTurn && playerStrikes < 3) {
+                        startThinkingTimer()
+                    }
                 }
             }
         }
     }
 
     private fun startThinkingTimer() {
-        // 1. Limpiar timers anteriores
         thinkingTimer?.cancel()
         answerTimer?.cancel()
-
-        // 2. Dejar el mic listo siempre que empiece un turno de pensar
         restoreMicButton()
 
-        // 3. Preparamos la barra
-        val totalTime = 5000L
-        val interval = 50L
-
         binding.pbTimer.visibility = View.VISIBLE
-        binding.pbTimer.max = totalTime.toInt()
-        binding.pbTimer.progress = totalTime.toInt()
+        binding.pbTimer.max = 5000
+        binding.pbTimer.progress = 5000
 
-        // 4. Iniciamos el conteo de "pensar"
         thinkingTimer = lifecycleScope.launch {
-            var currentTime = totalTime
-
+            var currentTime = 5000L
             while (currentTime > 0) {
-                delay(interval)
-                currentTime -= interval
+                delay(50)
+                currentTime -= 50
                 binding.pbTimer.progress = currentTime.toInt()
             }
 
-            // Si se acabó el tiempo y NO está grabando, es fallo
             if (!isRecording) {
                 binding.pbTimer.visibility = View.GONE
                 binding.btnMic.isEnabled = false
-
                 toast("¡Se acabó el tiempo para pensar!")
                 soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                 vibrateOnError()
-
                 delay(1500)
 
                 if (isMultiplayer && !isHost) {
-                    // CLIENTE: avisa al host y luego espera verificación
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        ConnectionManager.dataOut?.writeUTF("GUESS:TIMEOUT")
-                        ConnectionManager.dataOut?.flush()
-                    }
-                    waitForHostVerification()
+                    sendClientGuess("TIMEOUT")
                 } else {
-                    // HOST / offline
-                    if (isStealAttempt) {
-                        checkAnswer("TIMEOUT")
-                    } else {
+                    if (isStealAttempt) checkAnswer("TIMEOUT")
+                    else {
                         addStrike()
                         if (isPlayerTurn && playerStrikes < 3) {
                             delay(1000)
-                            binding.btnMic.isEnabled = true
+                            restoreMicButton()
                             startThinkingTimer()
                         }
                     }
@@ -706,40 +622,30 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showStealResultDialog(success: Boolean) {
-        val title: String
+        val winnerCode: String
+        val reason = "STEAL"
 
-        // Determinamos los nombres para ser explícitos en el mensaje
-        // isPlayerTurn = true  -> Es el turno del Host (Anfitrión)
-        // isPlayerTurn = false -> Es el turno del Oponente (Invitado)
-
+        // Lógica para determinar ganador y códigos
         if (success) {
-            // CASO A: El que intentó robar ACERTÓ -> Gana los puntos.
-            if (isPlayerTurn) {
-                // El Host robó con éxito
-                title = "¡ROBO EXITOSO DEL ANFITRIÓN!\n¡$playerName SE LLEVA LOS PUNTOS!"
-            } else {
-                // El Invitado robó con éxito
-                title = "¡ROBO EXITOSO DEL INVITADO!\n¡$botName SE LLEVA LOS PUNTOS!"
-            }
+            // Robo Exitoso
+            if (isPlayerTurn) winnerCode = "HOST_WINS" // Host robó bien
+            else winnerCode = "CLIENT_WINS"            // Cliente robó bien
         } else {
-            // CASO B: El que intentó robar FALLÓ -> Gana el equipo contrario (el que defendía).
-            if (isPlayerTurn) {
-                // Host falló el robo -> Gana el Invitado
-                title = "¡ROBO FALLIDO DEL ANFITRIÓN!\n¡$botName GANA LA RONDA!"
-            } else {
-                // Invitado falló el robo -> Gana el Host
-                title = "¡ROBO FALLIDO DEL INVITADO!\n¡$playerName GANA LA RONDA!"
-            }
+            // Robo Fallido (Gana el que defendía)
+            if (isPlayerTurn) winnerCode = "CLIENT_WINS" // Host falló -> Cliente gana
+            else winnerCode = "HOST_WINS"                // Cliente falló -> Host gana
         }
 
-        showEndRoundDialog(title, currentScore)
+        // Título local (para el Host)
+        val localTitle = if (winnerCode == "HOST_WINS") {
+            if (isPlayerTurn) "¡ROBO EXITOSO!\n¡GANASTE LOS PUNTOS!" else "¡ROBO FALLIDO DEL OPONENTE!\n¡GANASTE!"
+        } else {
+            if (!isPlayerTurn) "¡ROBO EXITOSO DEL OPONENTE!\nPerdiste los puntos." else "¡ROBO FALLIDO!\n¡EL OPONENTE GANA!"
+        }
+
+        showEndRoundDialogInternal(localTitle, winnerCode, reason, currentScore)
     }
-
-
-
-
 
 
     private fun stopRecording() {
@@ -751,69 +657,6 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private var hostWaitJob: Job? = null
-    private fun waitForHostVerification() {
-        binding.pbTimer.visibility = View.GONE
-        binding.btnMic.isEnabled = false
-        binding.btnMic.setImageResource(android.R.drawable.ic_btn_speak_now)
-        binding.btnMic.alpha = 0.5f
-
-        // Cancelar cualquier listener previo
-        clientListenerJob?.cancel()
-        hostWaitJob?.cancel()
-
-        thinkingTimer?.cancel()
-        answerTimer?.cancel()
-        isRecording = false
-
-        hostWaitJob = lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                if (isStealAttempt) {
-                    // 🔥 ROBO: el host va a mandar REVEAL y luego END_ROUND
-                    while (isActive) {
-                        val cmd = withTimeoutOrNull(7000L) {
-                            ConnectionManager.dataIn?.readUTF()
-                        } ?: break
-
-                        withContext(Dispatchers.Main) {
-                            Log.d("NET_CLIENT", "Robo: recibido del host -> $cmd")
-                            handleNetworkCommand(cmd)
-                        }
-
-                        // Cuando llegue END_ROUND, ya cerramos el robo
-                        if (cmd.startsWith("END_ROUND")) break
-                    }
-                } else {
-                    // 🔹 Turno normal: solo esperamos un comando (REVEAL o STRIKE)
-                    val command = withTimeoutOrNull(7000L) {
-                        ConnectionManager.dataIn?.readUTF()
-                    }
-
-                    if (command == null) {
-                        withContext(Dispatchers.Main) {
-                            toast("No hubo respuesta del anfitrión. Intenta de nuevo.")
-                            restoreMicButton()
-                            startThinkingTimer()
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Log.d("NET_CLIENT", "Normal: recibido del host -> $command")
-                            handleNetworkCommand(command)
-                        }
-                    }
-                }
-
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    toast("Error de conexión esperando al anfitrión.")
-                    restoreMicButton()
-                    startThinkingTimer()
-                }
-            }
-        }
-    }
-
-
-
     private fun restoreMicButton() {
         binding.btnMic.apply {
             visibility = View.VISIBLE
@@ -824,6 +667,31 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         isRecording = false
     }
 
+    private fun initializeClientGame() {
+        toast("Conectado. Esperando pregunta del Host...")
+        binding.btnMic.visibility = View.GONE
+
+        // Iniciamos UN SOLO listener que durará toda la actividad
+        clientListenerJob?.cancel()
+        clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                while (isActive) {
+                    // Bloqueamos aquí esperando CUALQUIER mensaje del Host
+                    val command = ConnectionManager.dataIn?.readUTF() ?: break
+
+                    withContext(Dispatchers.Main) {
+                        // Procesamos todo en una sola función central
+                        handleNetworkCommand(command)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    toast("¡Error de conexión con el Host!")
+                }
+            }
+        }
+    }
 
     // --------------------------------------------------------------------
     // Lógica de respuestas
@@ -947,8 +815,7 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun addStrike() {
-        val strikeTakerIsPlayer = isPlayerTurn
-
+        // 1. Aumentamos contadores
         if (isPlayerTurn) {
             playerStrikes++
             currentStrikes = playerStrikes
@@ -957,21 +824,31 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
             currentStrikes = machineStrikes
         }
 
-        if (isMultiplayer && isHost) {
+        // 2. Host notifica al cliente
+        if (isHost) {
             lifecycleScope.launch(Dispatchers.IO) {
-                Log.d("NET_HOST", "Enviando STRIKE:$currentStrikes al cliente")
                 ConnectionManager.dataOut?.writeUTF("STRIKE:$currentStrikes")
                 ConnectionManager.dataOut?.flush()
             }
         }
 
+        // 3. Actualizamos las X visuales
         applyStrikeToUI(currentStrikes)
 
+        // 4. Checamos si murió (3 strikes)
         if (currentStrikes >= 3) {
-            if (strikeTakerIsPlayer) {
+            // 🔥 CORRECCIÓN: Silencio inmediato para todos antes de cambiar de fase
+            stopRecording()
+
+            if (isPlayerTurn) {
+                // EL JUGADOR ACTUAL (LOCAL) PERDIÓ
+                // Apagamos su micro y pasamos al robo del otro
                 binding.btnMic.visibility = View.GONE
+                binding.btnMic.isEnabled = false
                 startMachineStealAttempt()
             } else {
+                // EL OPONENTE (REMOTO) PERDIÓ
+                // El local roba, así que no ocultamos el micro aquí (se activa en startPlayerStealAttempt)
                 startPlayerStealAttempt()
             }
         }
@@ -991,27 +868,22 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun startMachineStealAttempt() {
-        // El jugador local (host) ya no puede hablar
+        isPlayerTurn = false // Turno del otro
+        isStealAttempt = true
+
+        // 🔥 CORRECCIÓN: Asegurar que el Host esté callado y sin botón
+        stopRecording()
         binding.btnMic.visibility = View.GONE
+        binding.btnMic.isEnabled = false
 
-        if (isMultiplayer) {
-            // Desde aquí ya estamos en modo ROBO
-            isPlayerTurn = false
-            isStealAttempt = true
+        // Notificamos al cliente que ÉL (Client/Player) debe robar
+        lifecycleScope.launch(Dispatchers.IO) {
+            ConnectionManager.dataOut?.writeUTF("STEAL:player") // "player" indica que le toca al cliente
+            ConnectionManager.dataOut?.flush()
+        }
 
-            // 🔥 CAMBIO CRITICO: Iniciamos la escucha inmediatamente (sin esperar al click del Dialog)
-            // para evitar el bloqueo si el cliente responde rápido.
-            startMachineTurn()
-
-            showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
-                // Al dar OK solo cerramos el diálogo, la lógica de red ya está corriendo.
-            }
-
-            // Avisamos al invitado que él tiene el robo
-            lifecycleScope.launch(Dispatchers.IO) {
-                ConnectionManager.dataOut?.writeUTF("STEAL:opponent")
-                ConnectionManager.dataOut?.flush()
-            }
+        showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
+            // Solo esperar en silencio
         }
     }
 
@@ -1024,18 +896,40 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     // --------------------------------------------------------------------
 
     private fun handleNetworkCommand(command: String) {
-        Log.d(
-            "NET_ANY",
-            "handleNetworkCommand: $command  (isHost=$isHost, isPlayerTurn=$isPlayerTurn)"
-        )
+        Log.d("NET_MSG", "Recibido: $command")
+
+        // Caso especial: Recepción de pregunta (viene con separador especial)
+        if (command.startsWith("QUESTION::SEP::")) {
+            val questionJson = command.substringAfter("QUESTION::SEP::")
+            currentQuestionData = parseQuestionDataFromJson(questionJson)
+            if (currentQuestionData != null) {
+                binding.tvQuestion.text = currentQuestionData!!.question
+                setupRecyclerView()
+                showFaceOffDialog()
+            }
+            return
+        }
+
         val parts = command.split(":")
+        val action = parts[0]
 
-        when (parts[0]) {
+        when (action) {
+            // --- Lógica del FaceOff ---
+            "YOU_WIN" -> { // El Host me dice que gané el buzzer
+                faceOffDialog?.dismiss()
+                toast("¡Ganaste el turno!")
+                startPlayerTurn()
+            }
+            "YOU_LOSE" -> { // El Host me dice que perdí el buzzer
+                faceOffDialog?.dismiss()
+                toast("¡'$botName' ganó el turno!")
+                startMachineTurn()
+            }
 
+            // --- Lógica de Juego ---
             "GUESS" -> {
-                if (isMultiplayer && isHost) {
+                if (isHost) {
                     val guess = command.substringAfter("GUESS:")
-                    Log.d("NET_HOST", "Recibido GUESS del cliente: $guess")
                     toast("El oponente dice: $guess")
                     checkAnswer(guess)
                 }
@@ -1046,12 +940,15 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                 answerAdapter.revealAnswer(index)
                 soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
 
-                lifecycleScope.launch {
-                    delay(1000)
+                // Si se reveló una respuesta, detenemos timers locales
+                thinkingTimer?.cancel()
+                answerTimer?.cancel()
+                binding.pbTimer.visibility = View.GONE
 
-                    // 🔥 CORRECCIÓN 1: Solo reactivamos el micro si es MI turno.
-                    // Si soy el visitante y el host reveló una respuesta, yo sigo callado.
-                    if (isPlayerTurn && !isStealAttempt && playerStrikes < 3) {
+                lifecycleScope.launch {
+                    delay(1500)
+                    // Solo reactivamos mi micro si es MI turno y NO es robo
+                    if (isPlayerTurn && !isStealAttempt) {
                         restoreMicButton()
                         startThinkingTimer()
                     }
@@ -1062,18 +959,14 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                 val strikeNum = parts[1].toInt()
                 applyStrikeToUI(strikeNum)
 
+                // Feedback visual/sonoro
                 lifecycleScope.launch {
-                    delay(500)
-
                     toast("¡Incorrecto!")
                     soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                     vibrateOnError()
+                    delay(1500)
 
-                    // 🔥 CORRECCIÓN 2: IMPORTANTE
-                    // Antes reactivábamos el micro ciegamente.
-                    // Ahora verificamos "isPlayerTurn".
-                    // Si el Host falló (isPlayerTurn = false para el cliente),
-                    // el cliente NO debe activar su micrófono.
+                    // Solo reactivo micro si sigo en mi turno regular
                     if (isPlayerTurn && strikeNum < 3 && !isStealAttempt) {
                         restoreMicButton()
                         startThinkingTimer()
@@ -1082,39 +975,60 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
             }
 
             "STEAL" -> {
+                // Limpiamos cualquier timer previo
+                thinkingTimer?.cancel()
+                answerTimer?.cancel()
+
                 if (parts[1] == "player") {
-                    // Host me avisa: Su jugador perdió, el OTRO va a robar.
-                    isPlayerTurn = false
-                    showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
-                        clientListenerJob?.cancel()
-                    }
-                } else if (parts[1] == "opponent") {
-                    // Host me avisa: YO (el oponente) voy a robar.
+                    // Host dice: "El Host falló. TE TOCA A TI (Cliente) ROBAR."
                     isPlayerTurn = true
                     isStealAttempt = true
 
-                    // Limpiamos cualquier estado previo para asegurar que el micro funcione
-                    stopRecording()
-
-                    showGameAlert("¡3 Strikes del Oponente!\n¡Tu turno de robar! (1 intento)") {
-                        // 🔥 CORRECCIÓN 3: Forzamos la visibilidad del botón
-                        // para asegurar que aparezca en el robo.
+                    showGameAlert("¡3 Strikes del Anfitrión!\n¡TU TURNO DE ROBAR!") {
+                        // Activamos micro
                         binding.btnMic.visibility = View.VISIBLE
+                        binding.btnMic.isEnabled = true
                         restoreMicButton()
                         startThinkingTimer()
+                    }
+
+                } else if (parts[1] == "opponent") {
+                    // Host dice: "TÚ (Cliente) fallaste los 3 strikes. EL HOST ROBA."
+                    isPlayerTurn = false
+                    isStealAttempt = true
+
+                    // 🔥 CORRECCIÓN: ¡Cállate Cliente!
+                    stopRecording() // Detiene la escucha si estaba activa
+                    binding.btnMic.visibility = View.GONE // Oculta el botón
+                    binding.btnMic.isEnabled = false
+
+                    showGameAlert("¡El Anfitrión intentará robar!") {
+                        // Solo espero en silencio
                     }
                 }
             }
 
             "END_ROUND" -> {
-                val title = parts[1]
-                val score = parts[2].toInt()
-                cleanupAllListeners()
-                showEndRoundDialog(title, score)
+                // Protocolo: END_ROUND : WINNER_CODE : REASON : SCORE
+                val winnerCode = parts[1] // HOST_WINS o CLIENT_WINS
+                val reason = parts[2]     // NORMAL o STEAL
+                val score = parts[3].toInt()
+
+                cleanupAllListeners() // Detener timers
+
+                // Construimos el mensaje correcto para MI (Cliente)
+                val finalTitle = if (winnerCode == "CLIENT_WINS") {
+                    // Yo gané
+                    if (reason == "STEAL") "¡ROBO EXITOSO!\n¡GANASTE LA RONDA!" else "¡GANASTE LA RONDA!"
+                } else {
+                    // Yo perdí (Ganó Host)
+                    if (reason == "STEAL") "¡TE ROBARON LOS PUNTOS!\nEl anfitrión gana." else "¡EL ANFITRIÓN GANA LA RONDA!"
+                }
+
+                showEndRoundDialog(finalTitle, score)
             }
 
             "RESET_GAME" -> {
-                // El Host decidió volver a jugar, nos movemos a la Ruleta
                 toast("El anfitrión reinició la partida.")
                 val intent = Intent(this, SpinWheelActivity::class.java)
                 startActivity(intent)
@@ -1168,93 +1082,67 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun showEndRoundDialog(title: String, score: Int) {
-        // Inflamos el diseño XML
+        // Si soy host y llego aquí, debo construir el mensaje de red
+        if (isHost) {
+            val winnerCode = if (title.contains(playerName) || title.contains("GANASTE")) "HOST_WINS" else "CLIENT_WINS"
+            showEndRoundDialogInternal(title, winnerCode, "NORMAL", score)
+        } else {
+            // Cliente solo muestra lo que recibió
+            showEndRoundDialogUI(title, score)
+        }
+    }
+
+    private fun showEndRoundDialogInternal(localTitle: String, winnerCode: String, reason: String, score: Int) {
+        // 1. Enviar resultado al cliente
+        if (isHost) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConnectionManager.dataOut?.writeUTF("END_ROUND:$winnerCode:$reason:$score")
+                ConnectionManager.dataOut?.flush()
+            }
+        }
+        // 2. Mostrar localmente
+        showEndRoundDialogUI(localTitle, score)
+    }
+
+    // Esta es la parte de UI pura (NO CAMBIA MUCHO, pero asegúrate de tenerla separada)
+    private fun showEndRoundDialogUI(title: String, score: Int) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_end_round, null)
         val builder = AlertDialog.Builder(this)
         builder.setView(dialogView)
         builder.setCancelable(false)
-
         val dialog = builder.create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        val tvTitle = dialogView.findViewById<TextView>(R.id.tvEndTitle)
-        val tvScore = dialogView.findViewById<TextView>(R.id.tvEndScore)
-        val btnPlayAgain = dialogView.findViewById<Button>(R.id.btnPlayAgain)
-        val btnGoToMenu = dialogView.findViewById<Button>(R.id.btnGoToMenu)
+        dialogView.findViewById<TextView>(R.id.tvEndTitle).text = title
+        dialogView.findViewById<TextView>(R.id.tvEndScore).text = "Puntaje Final: $score"
 
-        tvTitle.text = title
-        tvScore.text = "Puntaje Final: $score"
+        val winnerName = if (title.contains("GANASTE") || title.contains(playerName)) playerName else botName
+        saveGameResult(winnerName, score)
 
-        // Guardar resultado en BD (si aplica)
-        val winnerName = if (title.contains(playerName, ignoreCase = true) || title.contains("GANASTE") || title.contains("EXITOSO")) playerName else botName
-        if (!title.contains("Empate")) {
-            saveGameResult(winnerName, score)
-        }
-
-        // --- CORRECCIÓN AQUÍ: ENVIAR EL MENSAJE OPUESTO AL CLIENTE ---
-        if (isMultiplayer && isHost) {
-            // Calculamos qué debe ver el OTRO jugador (el Cliente)
-            val remoteTitle = when {
-                // 1. Si YO gané normal -> Él perdió
-                title.contains("GANASTE LA RONDA") -> "¡$botName GANA LA RONDA!"
-
-                // 2. Si el BOT (Cliente) ganó normal -> Él ganó
-                title.contains("$botName GANA") -> "¡GANASTE LA RONDA!"
-
-                // 3. Robo Exitoso MÍO -> A él le robaron
-                title.contains("ROBO EXITOSO DEL ANFITRIÓN") -> "¡EL ANFITRIÓN TE ROBÓ LA RONDA!\nTus puntos se van al otro equipo."
-
-                // 4. Robo Exitoso SUYO -> Él robó
-                title.contains("EL INVITADO TE ROBÓ") -> "¡ROBO EXITOSO DEL INVITADO!\nTe llevas todos los puntos."
-
-                // 5. Robo Fallido MÍO -> Él gana
-                title.contains("ROBO FALLIDO DEL ANFITRIÓN") -> "¡ROBO FALLIDO DEL ANFITRIÓN!\nEl INVITADO se queda con los puntos."
-
-                // 6. Robo Fallido SUYO -> Yo gano (Él pierde el robo)
-                title.contains("ROBO FALLIDO DEL INVITADO") -> "¡ROBO FALLIDO DEL INVITADO!\nEl ANFITRIÓN se queda con los puntos."
-
-                // Default (por si acaso)
-                else -> title
-            }
-
-            lifecycleScope.launch(Dispatchers.IO) {
-                // Enviamos 'remoteTitle' en lugar de 'title'
-                ConnectionManager.dataOut?.writeUTF("END_ROUND:$remoteTitle:$score")
-                ConnectionManager.dataOut?.flush()
-            }
-        }
-        // ------------------------------------------------------------
-
-        // --- BOTÓN: VOLVER A JUGAR ---
-        btnPlayAgain.setOnClickListener {
+        dialogView.findViewById<Button>(R.id.btnPlayAgain).setOnClickListener {
             dialog.dismiss()
-
-            // Si soy HOST, le ordeno al cliente que también se vaya a la ruleta
-            if (isMultiplayer && isHost) {
+            if (isHost) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     ConnectionManager.dataOut?.writeUTF("RESET_GAME")
                     ConnectionManager.dataOut?.flush()
                 }
             }
-
-            // Movernos a la Ruleta
-            val intent = Intent(this, SpinWheelActivity::class.java)
-            intent.putExtra("IS_MULTIPLAYER", isMultiplayer)
-            intent.putExtra("IS_HOST", isHost)
-            intent.putExtra("OPPONENT_NAME", botName)
+            val intent = Intent(this, SpinWheelActivity::class.java).apply {
+                putExtra("IS_MULTIPLAYER", isMultiplayer)
+                putExtra("IS_HOST", isHost)
+                putExtra("OPPONENT_NAME", botName)
+            }
             startActivity(intent)
             finish()
         }
 
-        // --- BOTÓN: MENÚ ---
-        btnGoToMenu.setOnClickListener {
+        dialogView.findViewById<Button>(R.id.btnGoToMenu).setOnClickListener {
             dialog.dismiss()
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
         }
-
         dialog.show()
     }
 

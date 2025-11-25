@@ -1478,7 +1478,7 @@
           "respuestas": [
             { "texto": "Hidalgo", "puntos": 75 },
             { "texto": "Puebla", "puntos": 10 },
-            { "texto": "CDMX", "puntos": 10 },
+            { "texto": "Ciudad de mexico", "puntos": 10 },
             { "texto": "Pachuca", "puntos": 3 },
             { "texto": "Real del Monte", "puntos": 2 }
           ]
