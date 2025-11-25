@@ -871,17 +871,17 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         }
     }
 
+    // Se ejecuta cuando el HOST pierde 3 strikes y le toca al CLIENTE robar
     private fun startMachineStealAttempt() {
-        // El Cliente (Machine/Oponente) va a robar
-        isPlayerTurn = false
+        isPlayerTurn = false // Turno del otro (Cliente)
         isStealAttempt = true
 
-        // Asegurar que el Host esté callado y sin botón
+        // 1. Aseguramos que el Host esté callado y sin botón
         stopRecording()
         binding.btnMic.visibility = View.GONE
         binding.btnMic.isEnabled = false
 
-        // Notificamos al cliente que ÉL (player) debe robar
+        // 2. Notificamos al cliente que ÉL (player/cliente) debe robar
         lifecycleScope.launch(Dispatchers.IO) {
             ConnectionManager.dataOut?.writeUTF("STEAL:player")
             ConnectionManager.dataOut?.flush()
@@ -891,15 +891,14 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
             // Solo esperar en silencio
         }
 
-        // 🔥 CORRECCIÓN CRÍTICA: ACTIVAR LA ESCUCHA DEL HOST
-        // Como veníamos de jugar nosotros (Host), el listener estaba apagado.
-        // Debemos encenderlo para recibir el "GUESS:..." del cliente durante el robo.
+        // 3. Activamos el oído del Host
         if (isMultiplayer && isHost) {
             clientListenerJob?.cancel()
             clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     while (isActive) {
                         val command = ConnectionManager.dataIn?.readUTF() ?: break
+
                         withContext(Dispatchers.Main) {
                             handleNetworkCommand(command)
                         }
