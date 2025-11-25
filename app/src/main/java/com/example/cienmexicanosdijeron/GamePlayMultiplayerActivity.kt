@@ -898,7 +898,6 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     private fun handleNetworkCommand(command: String) {
         Log.d("NET_MSG", "Recibido: $command")
 
-        // Caso especial: Recepción de pregunta (viene con separador especial)
         if (command.startsWith("QUESTION::SEP::")) {
             val questionJson = command.substringAfter("QUESTION::SEP::")
             currentQuestionData = parseQuestionDataFromJson(questionJson)
@@ -914,19 +913,16 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
         val action = parts[0]
 
         when (action) {
-            // --- Lógica del FaceOff ---
-            "YOU_WIN" -> { // El Host me dice que gané el buzzer
+            "YOU_WIN" -> {
                 faceOffDialog?.dismiss()
                 toast("¡Ganaste el turno!")
                 startPlayerTurn()
             }
-            "YOU_LOSE" -> { // El Host me dice que perdí el buzzer
+            "YOU_LOSE" -> {
                 faceOffDialog?.dismiss()
                 toast("¡'$botName' ganó el turno!")
                 startMachineTurn()
             }
-
-            // --- Lógica de Juego ---
             "GUESS" -> {
                 if (isHost) {
                     val guess = command.substringAfter("GUESS:")
@@ -934,20 +930,17 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                     checkAnswer(guess)
                 }
             }
-
             "REVEAL" -> {
                 val index = parts[1].toInt()
                 answerAdapter.revealAnswer(index)
                 soundPool?.play(correctSoundId, 1f, 1f, 0, 0, 1f)
 
-                // Si se reveló una respuesta, detenemos timers locales
                 thinkingTimer?.cancel()
                 answerTimer?.cancel()
                 binding.pbTimer.visibility = View.GONE
 
                 lifecycleScope.launch {
                     delay(1500)
-                    // Solo reactivamos mi micro si es MI turno y NO es robo
                     if (isPlayerTurn && !isStealAttempt) {
                         restoreMicButton()
                         startThinkingTimer()
@@ -955,19 +948,28 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                 }
             }
 
+            // 🔥 AQUÍ ESTÁ LA CORRECCIÓN CLAVE 🔥
             "STRIKE" -> {
                 val strikeNum = parts[1].toInt()
                 applyStrikeToUI(strikeNum)
 
-                // Feedback visual/sonoro
                 lifecycleScope.launch {
                     toast("¡Incorrecto!")
                     soundPool?.play(wrongSoundId, 1f, 1f, 0, 0, 1f)
                     vibrateOnError()
                     delay(1500)
 
-                    // Solo reactivo micro si sigo en mi turno regular
-                    if (isPlayerTurn && strikeNum < 3 && !isStealAttempt) {
+                    // SI LLEGAMOS AL 3er STRIKE, CORTAMOS TODO
+                    if (strikeNum >= 3) {
+                        stopRecording()
+                        thinkingTimer?.cancel()
+                        answerTimer?.cancel()
+                        binding.btnMic.visibility = View.GONE
+                        binding.btnMic.isEnabled = false
+                        // No hacemos nada más, esperamos el comando "STEAL" que viene en camino
+                    }
+                    // SI ES MENOS DE 3, SEGUIMOS JUGANDO
+                    else if (isPlayerTurn && !isStealAttempt) {
                         restoreMicButton()
                         startThinkingTimer()
                     }
@@ -975,9 +977,9 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
             }
 
             "STEAL" -> {
-                // Limpiamos cualquier timer previo
                 thinkingTimer?.cancel()
                 answerTimer?.cancel()
+                binding.btnMic.visibility = View.GONE
 
                 if (parts[1] == "player") {
                     // Host dice: "El Host falló. TE TOCA A TI (Cliente) ROBAR."
@@ -985,43 +987,36 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
                     isStealAttempt = true
 
                     showGameAlert("¡3 Strikes del Anfitrión!\n¡TU TURNO DE ROBAR!") {
-                        // Activamos micro
                         binding.btnMic.visibility = View.VISIBLE
-                        binding.btnMic.isEnabled = true
                         restoreMicButton()
                         startThinkingTimer()
                     }
-
                 } else if (parts[1] == "opponent") {
                     // Host dice: "TÚ (Cliente) fallaste los 3 strikes. EL HOST ROBA."
                     isPlayerTurn = false
                     isStealAttempt = true
 
-                    // 🔥 CORRECCIÓN: ¡Cállate Cliente!
-                    stopRecording() // Detiene la escucha si estaba activa
-                    binding.btnMic.visibility = View.GONE // Oculta el botón
+                    // Aseguramos silencio por si acaso
+                    stopRecording()
+                    binding.btnMic.visibility = View.GONE
                     binding.btnMic.isEnabled = false
 
                     showGameAlert("¡El Anfitrión intentará robar!") {
-                        // Solo espero en silencio
+                        // Solo espero
                     }
                 }
             }
 
             "END_ROUND" -> {
-                // Protocolo: END_ROUND : WINNER_CODE : REASON : SCORE
-                val winnerCode = parts[1] // HOST_WINS o CLIENT_WINS
-                val reason = parts[2]     // NORMAL o STEAL
+                val winnerCode = parts[1]
+                val reason = parts[2]
                 val score = parts[3].toInt()
 
-                cleanupAllListeners() // Detener timers
+                cleanupAllListeners()
 
-                // Construimos el mensaje correcto para MI (Cliente)
                 val finalTitle = if (winnerCode == "CLIENT_WINS") {
-                    // Yo gané
                     if (reason == "STEAL") "¡ROBO EXITOSO!\n¡GANASTE LA RONDA!" else "¡GANASTE LA RONDA!"
                 } else {
-                    // Yo perdí (Ganó Host)
                     if (reason == "STEAL") "¡TE ROBARON LOS PUNTOS!\nEl anfitrión gana." else "¡EL ANFITRIÓN GANA LA RONDA!"
                 }
 
