@@ -855,41 +855,61 @@ class GamePlayMultiplayerActivity : AppCompatActivity() {
     }
 
     private fun startPlayerStealAttempt() {
+        // El Host (Player) va a robar
         isPlayerTurn = true
         isStealAttempt = true
+
         showGameAlert("¡3 Strikes de '$botName'!\n¡Tu turno de robar!") {
             binding.btnMic.visibility = View.VISIBLE
             startThinkingTimer()
         }
+
         lifecycleScope.launch(Dispatchers.IO) {
-            ConnectionManager.dataOut?.writeUTF("STEAL:player")
+            // CORRECCIÓN: Enviamos "opponent" para que el Cliente sepa que NO es su turno
+            ConnectionManager.dataOut?.writeUTF("STEAL:opponent")
             ConnectionManager.dataOut?.flush()
         }
     }
 
     private fun startMachineStealAttempt() {
-        isPlayerTurn = false // Turno del otro
+        // El Cliente (Machine/Oponente) va a robar
+        isPlayerTurn = false
         isStealAttempt = true
 
-        // 🔥 CORRECCIÓN: Asegurar que el Host esté callado y sin botón
+        // Asegurar que el Host esté callado y sin botón
         stopRecording()
         binding.btnMic.visibility = View.GONE
         binding.btnMic.isEnabled = false
 
-        // Notificamos al cliente que ÉL (Client/Player) debe robar
+        // Notificamos al cliente que ÉL (player) debe robar
         lifecycleScope.launch(Dispatchers.IO) {
-            ConnectionManager.dataOut?.writeUTF("STEAL:player") // "player" indica que le toca al cliente
+            ConnectionManager.dataOut?.writeUTF("STEAL:player")
             ConnectionManager.dataOut?.flush()
         }
 
         showGameAlert("¡3 STRIKES!\n¡'$botName' intentará robar!") {
             // Solo esperar en silencio
         }
+
+        // 🔥 CORRECCIÓN CRÍTICA: ACTIVAR LA ESCUCHA DEL HOST
+        // Como veníamos de jugar nosotros (Host), el listener estaba apagado.
+        // Debemos encenderlo para recibir el "GUESS:..." del cliente durante el robo.
+        if (isMultiplayer && isHost) {
+            clientListenerJob?.cancel()
+            clientListenerJob = lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    while (isActive) {
+                        val command = ConnectionManager.dataIn?.readUTF() ?: break
+                        withContext(Dispatchers.Main) {
+                            handleNetworkCommand(command)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
-
-
-
-
 
     // --------------------------------------------------------------------
     // Red: comandos
